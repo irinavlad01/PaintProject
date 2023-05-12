@@ -193,6 +193,19 @@ def delete_cart(current_user):
 
     return jsonify({'message' : 'Cart deleted!'})
 
+@app.route('/cart/update', methods = ['PUT'])
+@token_required
+def update_cart(current_user):
+
+    cos = Cos.query.filter_by(id_utilizator = current_user.id, activ=True).first()
+    if not cos:
+        return jsonify({'message' : f'Utilizatorul {current_user.prenume} nu are un cos activ.'})
+    
+    cos.activ = False
+    db.session.commit()
+
+    return jsonify({'message' : f'Cosul utilizatorului {current_user.prenume} a devenit inactiv.'})
+
 #Endpoints produse
 @app.route('/products', methods=['GET'])
 def get_all_products():
@@ -284,20 +297,22 @@ def add_to_cart(current_user):
     produs_id = request.get_json()['produs_id']
     produs = Produse.query.get(produs_id)
 
-    cos = current_user.cos
+    cos = Cos.query.filter_by(id_utilizator=current_user.id, activ=True).first()
 
     if not cos:
-        cos = Cos(id_utilizator = current_user.id)
+        cos = Cos(id_utilizator=current_user.id)
         db.session.add(cos)
         db.session.commit()
 
     if not produs:
         return jsonify({'message' : 'Produsul nu (mai) este disponibil'}), 404
     
+    if DetaliiCos.query.filter_by(id_cos = cos.id, id_produs = produs_id).first() and cos.activ == True:
+        return jsonify({'message' : f'Produsul {produs.nume} a fost adaugat deja in cosul utilizatorului {current_user.prenume}'})
+    
     detalii_cos = DetaliiCos(id_cos = cos.id, id_produs = produs.id)
     db.session.add(detalii_cos)
     db.session.commit()
-
     return jsonify({'message' : f'Produsul {produs.nume} adaugat cu succes!'})
 
 
@@ -336,4 +351,21 @@ def delete_from_cart(current_user, id_produs):
     db.session.commit()
 
     return jsonify({'message' : f'Produs sters din cosul cu id {cos.id}'})
+
+@app.route('/order/create', methods = ['POST'])
+@token_required
+def place_order(current_user):
+    cos = Cos.query.filter_by(id_utilizator = current_user.id, activ=True).first()
+    produse = db.session.query(Produse).join(DetaliiCos).join(Cos).filter(Cos.id_utilizator == current_user.id, DetaliiCos.cos.has(activ=True)).all()
+
+    total = 0
+    for produs in produse:
+        total += produs.pret
+
+    comanda = Comenzi(id_cos = cos.id, total = total)
+    db.session.add(comanda)
+    cos.activ = False
+    db.session.commit()
+
+    return jsonify({'message' : 'Comanda a fost plasata cu succes'})
 
