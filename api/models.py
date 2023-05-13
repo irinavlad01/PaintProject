@@ -38,7 +38,7 @@ class Produse(db.Model):
     imagine = db.Column(db.String(50), nullable = False, unique=True) #imaginea sa fie unica
     data_lansare = db.Column(db.DateTime, default=datetime.utcnow)
     stoc = db.Column(db.Boolean, default = True, nullable = False)
-    detalii_cos = db.relationship('DetaliiCos', backref = 'produse', uselist = True)
+    detalii_cos = db.relationship('DetaliiCos', backref = 'produs', uselist = True)
 
     def __repr__(self):
         return f"Produse('{self.id}', {self.nume}', '{self.categorie}', '{self.pret}', '{self.descriere}', '{self.imagine}', '{self.data_lansare}', {self.stoc}')"
