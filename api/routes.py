@@ -1,4 +1,4 @@
-from api import app, db, mail
+from api import app, db
 from flask import request, jsonify, make_response
 from api.models import Utilizatori, Produse, Cos, DetaliiCos, Comenzi, ComenziPersonalizate
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -230,20 +230,20 @@ def update_cart(current_user):
 @app.route('/products', methods=['GET'])
 def get_all_products():
 
-    products = Produse.query.all()
+    produse = Produse.query.all()
 
     output = []
 
-    for product in products:
-        product_data = {}
-        product_data['id'] = product.id
-        product_data['nume'] = product.nume
-        product_data['categorie'] = product.categorie
-        product_data['pret'] = product.pret 
-        product_data['descriere'] = product.descriere
-        product_data['imagine'] = product.imagine
-        product_data['data_lansare'] = product.data_lansare
-        output.append(product_data)
+    for produs in produse:
+        produs_data = {}
+        produs_data['id'] = produs.id
+        produs_data['nume'] = produs.nume
+        produs_data['categorie'] = produs.categorie
+        produs_data['pret'] = produs.pret 
+        produs_data['descriere'] = produs.descriere
+        produs_data['imagine'] = produs.imagine
+        produs_data['data_lansare'] = produs.data_lansare
+        output.append(produs_data)
 
     return jsonify({'produse' : output})
     
@@ -265,7 +265,7 @@ def get_one_product(id_prod):
     product_data['imagine'] = product.imagine
     product_data['data_lansare'] = product.data_lansare
 
-    return jsonify({'produse' : product_data})
+    return jsonify({'produs' : product_data})
 
 
 @app.route('/products/create', methods=['POST'])
