@@ -1,4 +1,4 @@
-from api import app, db
+from api import app, db, mail
 from flask import request, jsonify, make_response
 from api.models import Utilizatori, Produse, Cos, DetaliiCos, Comenzi, ComenziPersonalizate
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -398,7 +398,6 @@ def place_order(current_user):
     db.session.add(comanda)
     cos.activ = False
     db.session.commit()
-
     return jsonify({'message' : 'Comanda a fost plasata cu succes'})
 
 @app.route('/orders/show', methods=['GET'])
