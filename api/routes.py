@@ -77,6 +77,20 @@ def one_user(current_user, id_utilizator):
 
     return jsonify({'user' : user_data})
 
+@app.route('/logged_user', methods=['GET'])
+@token_required
+def get_logged_user(current_user):
+    user_data = {}
+    user_data['id'] = current_user.id
+    user_data['nume'] = current_user.nume
+    user_data['prenume'] = current_user.prenume
+    user_data['email'] = current_user.email
+    user_data['parola'] = current_user.parola
+    user_data['adresa_domiciliu'] = current_user.adresa_domiciliu
+    user_data['telefon'] = current_user.telefon
+
+    return jsonify({'user' : user_data})
+
 @app.route('/users/add', methods = ['POST'])
 @token_required
 def create_user(current_user):
@@ -359,7 +373,7 @@ def added_products(current_user):
         product_data['data_lansare'] = product.data_lansare
         output.append(product_data)
     
-    return jsonify({'Produse din cos' : output})
+    return jsonify({'produse' : output})
 
 @app.route('/cart/delete_product/<id_produs>', methods = ['DELETE'])
 @token_required
