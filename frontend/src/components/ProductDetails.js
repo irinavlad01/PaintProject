@@ -15,6 +15,10 @@ function ProductDetails() {
         })
     }, [id]);
 
+    const addToCart = () => {
+      API.addToCart(id).then(data => console.log(data))
+    }
+
   return (
     <>
     {
@@ -24,6 +28,7 @@ function ProductDetails() {
           <p>Name: {product.nume}</p>
           <p>Description: {product.descriere}</p>
           <p>Price: {product.pret}</p>
+          <button className="btn btn-success" onClick={addToCart}>Adaugă în coș</button>
         </div>
       ) : (<p>Produsul nu a fost gasit!</p>)
     }
