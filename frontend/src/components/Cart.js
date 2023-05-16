@@ -14,7 +14,7 @@ function Cart() {
     const token = localStorage.getItem('token')
     if(token){
       setIsAuth(true);
-      API.cartProducts().then(data => setAddedProducts(data.produse))
+      API.cartProducts().then(data => {setAddedProducts(data.produse)})
     } 
   }, []);
 
@@ -38,7 +38,7 @@ function Cart() {
       {isAuth ? (<button className="btn btn-primary" onClick={handleOrder}>Comandă acum!</button>)
       : null}
         </ul>
-        {message &&<p>{message}</p>}
+        {message &&<p className="alert alert-success w-25" role="alert">{message}</p>}
     </div>
   )
 }

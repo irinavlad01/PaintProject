@@ -17,13 +17,13 @@ def token_required(f):
             token = request.headers['x-access-token']
         
         if not token:
-            return jsonify({'message' : 'Token is missing!'}), 401
+            return jsonify({'message' : 'Token lipsa din header!'}), 401
         
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms = ['HS256'])
             current_user = Utilizatori.query.filter_by(id=data['id']).first()
         except:
-            return jsonify({'message' : 'Token is invalid or you must log in!'}), 401
+            return make_response(jsonify({'message' : "Token expirat sau nu sunteti autentificat!"}), 401)
     
         return f(current_user, *args, **kwargs)
     
@@ -256,6 +256,7 @@ def get_all_products():
         produs_data['pret'] = produs.pret 
         produs_data['descriere'] = produs.descriere
         produs_data['imagine'] = produs.imagine
+        produs_data['stoc'] = produs.stoc
         produs_data['data_lansare'] = produs.data_lansare
         output.append(produs_data)
 
@@ -277,6 +278,7 @@ def get_one_product(id_prod):
     product_data['pret'] = product.pret 
     product_data['descriere'] = product.descriere
     product_data['imagine'] = product.imagine
+    product_data['stoc'] = product.stoc
     product_data['data_lansare'] = product.data_lansare
 
     return jsonify({'produs' : product_data})
@@ -370,6 +372,7 @@ def added_products(current_user):
         product_data['pret'] = product.pret 
         product_data['descriere'] = product.descriere
         product_data['imagine'] = product.imagine
+        product_data['stoc'] = product.stoc
         product_data['data_lansare'] = product.data_lansare
         output.append(product_data)
     
