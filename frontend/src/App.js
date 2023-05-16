@@ -7,9 +7,9 @@ import Home from './components/Home';
 import {Link, Route, Routes} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Account from './components/Account';
+import Orders from './components/Orders';
 
 function App() {
-
   const[isAuth, setIsAuth] = useState(false)
 
   useEffect( () => {
@@ -46,6 +46,7 @@ function App() {
           <Route path="/login" element={<Login/>}></Route>
           <Route path="/cos" element={<Cart/>}></Route>
           <Route path="/cont" element={<Account/>}></Route>
+          <Route path="/comenzi" element={<Orders/>}></Route>
         </Routes>
       </div>
     </>
