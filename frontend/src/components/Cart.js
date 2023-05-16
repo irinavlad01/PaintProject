@@ -1,14 +1,12 @@
 import React from 'react'
 import {useState, useEffect} from 'react';
-// import {useParams} from 'react-router-dom';
 import API from '../services/API';
 
 
 function Cart() {
-    const[isAuth, setIsAuth] = useState(false)
-    const[addedProducts, setAddedProducts] = useState([])
-    const[message, setMessage] = useState("")
-    // const {id} = useParams()
+    const[isAuth, setIsAuth] = useState(false);
+    const[addedProducts, setAddedProducts] = useState([]);
+    const[message, setMessage] = useState("");
 
   useEffect( () => {
     const token = localStorage.getItem('token')

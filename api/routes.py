@@ -70,6 +70,7 @@ def one_user(id_utilizator):
     user_data['email'] = user.email
     user_data['parola'] = user.parola
     user_data['adresa_domiciliu'] = user.adresa_domiciliu
+    user_data['admin'] = user.admin
     user_data['telefon'] = user.telefon
 
     return jsonify({'user' : user_data})
@@ -283,11 +284,11 @@ def create_products(current_user):
     return jsonify({'message' : f'Produs adaugat cu succes!'})
 
 #Update al stocului pe un anumit produs
-@app.route('/products/<id_prod>', methods = ['OPTIONS', 'PUT'])
+@app.route('/products/stoc/<id_prod>', methods = ['OPTIONS', 'PUT'])
 @token_required
-def update_product(current_user, id_prod):
+def update_product_stoc(current_user, id_prod):
     if not current_user.admin:
-        return jsonify({'message' : 'Acces restrictionat! Nu puteti actualiza produse daca nu sunteti administrator!'})
+        return jsonify({'message' : 'Acces restrictionat! Nu puteti actualiza produse daca nu sunteti administrator!'}), 401
     product = Produse.query.get(id_prod)
     if not product:
         return jsonify({'message' : 'Produsul nu exista!'})
@@ -297,6 +298,22 @@ def update_product(current_user, id_prod):
 
     response = jsonify({'message' : 'Stocul produsului a fost readus la 1'})
     return response
+
+@app.route('/products/<id_prod>', methods = ['OPTIONS', 'PUT'])
+@token_required
+def update_product(current_user, id_prod):
+    if not current_user.admin:
+        return jsonify({'message' : 'Acces restrictionat! Nu puteti actualiza produse daca nu sunteti administrator!'}), 401
+    
+    product = Produse.query.get(id_prod)
+    if not product:
+        return jsonify({'message' : 'Produsul nu exista!'}), 404
+    
+    data = request.get_json()
+
+    product.nume = data['nume']
+    db.session.commit()
+    return jsonify({'message' : 'Numele produsului a fost actualizat!'})
 
 #
 @app.route('/products/<id_prod>', methods = ['DELETE'])
@@ -426,7 +443,7 @@ def show_orders(current_user):
         comanda_data['produse_comanda'] = produse_comanda
         output.append(comanda_data)
 
-    return jsonify({'Comenzi': output})
+    return jsonify({'comenzi': output})
 
 
 

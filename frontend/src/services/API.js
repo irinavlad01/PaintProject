@@ -77,8 +77,38 @@ const API = {
             }
         })
         .then(response => response.data)
-    }
+    },
 
+    showAllOrders(){
+        return axios.get(`${BASE_URL}/orders/show`, {
+            headers: {
+                'Conent-Type' : 'application/json',
+                'x-access-token' : `${token}`
+            }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error))
+    }, 
+
+    updateProduct(id, productData){
+        return axios.put(`${BASE_URL}/products/${id}`, productData, {
+            headers: {
+                'Conent-Type' : 'application/json',
+                'x-access-token' : `${token}`
+            }
+        })
+        .then(response => response.data)
+    }, 
+
+    deleteProduct(id){
+        return axios.delete(`${BASE_URL}/products/${id}`, {
+            headers: {
+                'Conent-Type' : 'application/json',
+                'x-access-token' : `${token}`
+            }
+        })
+        .then(response => response.data)
+    }
 }
 
 export default API

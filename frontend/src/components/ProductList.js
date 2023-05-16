@@ -31,6 +31,7 @@ function ProductList() {
             setFilteredProducts(updatedProducts);
     }, [selectedCategory, products]);
 
+
   return (
     <div> 
       <h1>Lista produse</h1>
