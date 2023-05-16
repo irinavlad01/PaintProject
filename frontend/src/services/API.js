@@ -46,7 +46,6 @@ const API = {
             }
         })
         .then(response => response.data)
-        .catch(error => console.log(error))
     }, 
 
     cartProducts(){

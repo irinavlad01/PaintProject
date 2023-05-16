@@ -3,6 +3,7 @@ import ProductList from './components/ProductList';
 import ProductDetails from './components/ProductDetails';
 import Login from './components/Login';
 import Cart from './components/Cart';
+import Home from './components/Home';
 import {Link, Route, Routes} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
@@ -21,7 +22,7 @@ function App() {
 
   const handleLogout = () =>{
     localStorage.removeItem('token');
-    window.location.href = '/produse';
+    window.location.href = '/home';
   }
 
   return (
@@ -42,8 +43,9 @@ function App() {
       </nav>
       <div>
         <Routes>
-          <Route path="/produse" element={<ProductList/>}/>
-          <Route path ="/produse/:id" element={<ProductDetails/>}/>
+          <Route path="/" element={<Home/>}></Route>
+          <Route path="/produse" element={<ProductList/>}></Route>
+          <Route path ="/produse/:id" element={<ProductDetails/>}></Route>
           <Route path="/login" element={<Login/>}></Route>
           <Route path="/cos" element={<Cart/>}></Route>
         </Routes>
