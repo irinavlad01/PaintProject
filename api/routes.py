@@ -17,7 +17,7 @@ def token_required(f):
             token = request.headers['x-access-token']
         
         if not token:
-            return jsonify({'message' : 'Token lipsa din header!'}), 401
+            return jsonify({'message' : 'Token lipsa din header! Nu sunteti autentificat'}), 401
         
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms = ['HS256'])
@@ -55,16 +55,13 @@ def get_all_users(current_user):
 
     return jsonify({'users' : output})
 
+#Endpoint neprotejat de token, pentru a afisa utilizatorul autentificat in pagina
 @app.route('/users/<id_utilizator>', methods = ['GET'])
-@token_required
-def one_user(current_user, id_utilizator):
-
-    if not current_user.admin:
-        return jsonify({'message' : 'Must be an admin to perform that function'})
+def one_user(id_utilizator):
     
     user = Utilizatori.query.get(id_utilizator)
     if not user:
-        return jsonify({'message' : 'User does not exist'})
+        return jsonify({'message' : 'User does not exist'}), 404
     
     user_data = {}
     user_data['id'] = user.id
@@ -77,19 +74,6 @@ def one_user(current_user, id_utilizator):
 
     return jsonify({'user' : user_data})
 
-@app.route('/logged_user', methods=['GET'])
-@token_required
-def get_logged_user(current_user):
-    user_data = {}
-    user_data['id'] = current_user.id
-    user_data['nume'] = current_user.nume
-    user_data['prenume'] = current_user.prenume
-    user_data['email'] = current_user.email
-    user_data['parola'] = current_user.parola
-    user_data['adresa_domiciliu'] = current_user.adresa_domiciliu
-    user_data['telefon'] = current_user.telefon
-
-    return jsonify({'user' : user_data})
 
 @app.route('/users/add', methods = ['POST'])
 @token_required

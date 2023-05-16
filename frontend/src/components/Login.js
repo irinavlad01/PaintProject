@@ -15,7 +15,7 @@ function Login() {
         .then(data => {
             localStorage.setItem('token', data.token);
             console.log(data.token);
-            window.location.href = '/home';
+            window.location.href = '/cont';
         })
     }
 

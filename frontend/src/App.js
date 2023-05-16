@@ -6,6 +6,7 @@ import Cart from './components/Cart';
 import Home from './components/Home';
 import {Link, Route, Routes} from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Account from './components/Account';
 
 function App() {
 
@@ -20,10 +21,6 @@ function App() {
     console.log(token) //pentru testare doar
   }, []);
 
-  const handleLogout = () =>{
-    localStorage.removeItem('token');
-    window.location.href = '/home';
-  }
 
   return (
     <>
@@ -32,10 +29,10 @@ function App() {
           <li><Link to="/">Acasă</Link></li>
           <li><Link to="/produse">Produse</Link></li>
           {
-            isAuth ? (<li><button onClick={handleLogout}>Log out</button></li>)
+            isAuth ? (<li><Link to="/cont">Bine ai revenit!</Link></li>)
             :
             (
-              <li><Link to="/login"><button>Log in</button></Link></li>
+              <li><Link to="/cont">Intra in cont</Link></li>
             )
           }
           <li><Link to="/cos">Coșul tău</Link></li>
@@ -48,6 +45,7 @@ function App() {
           <Route path ="/produse/:id" element={<ProductDetails/>}></Route>
           <Route path="/login" element={<Login/>}></Route>
           <Route path="/cos" element={<Cart/>}></Route>
+          <Route path="/cont" element={<Account/>}></Route>
         </Routes>
       </div>
     </>
