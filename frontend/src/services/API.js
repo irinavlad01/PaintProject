@@ -68,7 +68,17 @@ const API = {
         })
         .then(response => response.data)
         .catch(error => console.log(error))
+    }, 
+
+    getUserById(id){
+        return axios.get(`${BASE_URL}/users/${id}`, {
+            headers: {
+                'Conent-Type' : 'application/json'
+            }
+        })
+        .then(response => response.data)
     }
+
 }
 
 export default API
