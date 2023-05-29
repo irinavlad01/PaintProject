@@ -24,6 +24,16 @@ const API = {
         .catch(error => console.log(error))
     }, 
 
+    register(userData){
+        return axios.post(`${BASE_URL}/users/add`, userData, {
+            headers:{
+                'Content-Type' : 'application/json'
+            }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error))
+    },
+
     login(username, password){
         return axios.get(`${BASE_URL}/login`, {
             // headers: {

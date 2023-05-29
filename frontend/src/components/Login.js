@@ -21,7 +21,7 @@ function Login() {
 
   return (
     <div>
-      {message && <p>{message}</p>}
+      {message && <p className="alert alert-success w-25" role="alert">{message}</p>}
       <h1>Log in</h1>
       <form onSubmit={handleLogin}>
         <label htmlFor="email">Email:</label>
