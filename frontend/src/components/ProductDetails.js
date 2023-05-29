@@ -49,23 +49,16 @@ function ProductDetails() {
     }
 
     const editProduct = (product) => {
-      setEditedProduct(product)
-      console.log("butonul a fost apelat")
+      setEditedProduct(product);
     }
 
     const deleteProduct = () =>{
       API.deleteProduct(product.id)
-      .then(resp => console.log(resp))
-      .catch(error => {
-        if(error.response && error.response.status === 401){
-            console.log("Acces neautorizat!")
-        }
-      })
+      .then(resp => console.log(resp));
     }
 
   return (
     <>
-    {/* {message && <p className="alert alert-danger w-25" role="alert">{message}</p>} */}
     {
       product ? (
         <div>

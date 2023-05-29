@@ -13,13 +13,23 @@ function Cart() {
     if(token){
       setIsAuth(true);
       API.cartProducts().then(data => {setAddedProducts(data.produse)})
-    } 
+      .catch(error => {
+        if(error.response && error.response.message === 401){
+          setIsAuth(false);
+        }
+      })
+    }
   }, []);
 
   const handleOrder = () => {
     API.placeOrder().then(data => {
         setMessage(data.message)
     })
+    .catch(error => {
+      if(error.response && error.response.message === 401){
+        setIsAuth(false);
+      }}
+    )
   }
 
   return (
@@ -33,8 +43,7 @@ function Cart() {
             </li>
       )))
       : (<p>Trebuie sa fiti autentificat pentru a vizualiza cosul</p>)}
-      {isAuth ? (<button className="btn btn-primary" onClick={handleOrder}>Comandă acum!</button>)
-      : null}
+      {isAuth && (<button className="btn btn-primary" onClick={handleOrder}>Comandă acum!</button>)}
         </ul>
         {message &&<p className="alert alert-success w-25" role="alert">{message}</p>}
     </div>

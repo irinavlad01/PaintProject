@@ -4,22 +4,15 @@ import API from '../services/API';
 
 function ProductUpdate(props) {
     const [nume, setNume] = useState(props.product.nume);
-    // const [message, setMessage] = useState("");
 
     const updateProduct = (e) =>{
         e.preventDefault()
         API.updateProduct(props.product.id, {nume})
-        .then(resp => console.log(resp))
-        .catch(error => {
-            if(error.response && error.response.status === 401){
-                console.log("Acces neautorizat!")
-            }
-        })
+        .then(resp => console.log(resp));
     }
 
   return (
     <div>
-    {/* {message && <p className="alert alert-danger w-25" role="alert">{message}</p>} */}
       {props.product ? (
       
         <form onSubmit={updateProduct} className="mb-3">
