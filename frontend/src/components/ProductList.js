@@ -10,6 +10,7 @@ function ProductList() {
 
     const[selectedCategory, setSelectedCategory] = useState('')
     const[filteredProducts, setFilteredProducts] = useState(products)
+    const [sortAsc, setSortAsc] = useState(true);
 
     useEffect( () => {
         API.getAllProducts().then(data => {
@@ -21,21 +22,37 @@ function ProductList() {
         })
     }, []);
 
-    const handleCategoryChange = e => setSelectedCategory(e.target.value);
-
     useEffect( () => {
       const updatedProducts = selectedCategory
             ? products.filter(product => product.categorie === selectedCategory)
             : products;
 
-            setFilteredProducts(updatedProducts);
-    }, [selectedCategory, products]);
+            // setFilteredProducts(updatedProducts);
+
+      const sortedProducts = sortAsc
+      ? [...updatedProducts].sort((a, b) => {
+          return new Date(b.data_lansare) - new Date(a.data_lansare);
+        })
+      : updatedProducts;
+      
+      setFilteredProducts(sortedProducts);
+
+    }, [selectedCategory, products, sortAsc]);
+
+    const handleCategoryChange = e => setSelectedCategory(e.target.value);
+
+    const handleSort = () => {
+      setSortAsc(!sortAsc);
+    };
 
 
   return (
     <div> 
       <h1>Lista produse</h1>
       {/* <button><Link to={`/products/create`}>Add product</Link></button> */}
+      <button onClick={handleSort}>
+        {sortAsc ? 'Cele mai recente' : 'Primele adaugari'}
+      </button>
       <select value={selectedCategory} onChange={handleCategoryChange} className="form-control w-25">
       <option value="">Toate categoriile</option>
       {categories.map((category, index) => (

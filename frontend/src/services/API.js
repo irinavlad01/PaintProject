@@ -56,7 +56,7 @@ const API = {
             }
         })
         .then(response => response.data)
-        .catch(error => console.log(error))
+        // .catch(error => console.log(error))
     }, 
 
     placeOrder(){
@@ -67,7 +67,7 @@ const API = {
             }
         })
         .then(response => response.data)
-        .catch(error => console.log(error))
+        // .catch(error => console.log(error))
     }, 
 
     getUserById(id){
@@ -98,6 +98,7 @@ const API = {
             }
         })
         .then(response => response.data)
+        .catch(error => console.log(error))
     }, 
 
     deleteProduct(id){
@@ -108,6 +109,7 @@ const API = {
             }
         })
         .then(response => response.data)
+        .catch(error => console.log(error))
     }
 }
 

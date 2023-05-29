@@ -140,7 +140,7 @@ def login():
         return make_response('Could not verify. User does not exist.', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
         #cand nu exista un anumit user
     if check_password_hash(user.parola, auth.password):
-        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 15)}, app.config['SECRET_KEY'], algorithm='HS256')
+        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 1)}, app.config['SECRET_KEY'], algorithm='HS256')
 
         return jsonify({'token' : token})
     else: 
@@ -303,7 +303,7 @@ def update_product_stoc(current_user, id_prod):
 @token_required
 def update_product(current_user, id_prod):
     if not current_user.admin:
-        return jsonify({'message' : 'Acces restrictionat! Nu puteti actualiza produse daca nu sunteti administrator!'}), 401
+        return jsonify({'message' : 'Acces restrictionat! Nu puteti actualiza produse daca nu sunteti administrator!'})
     
     product = Produse.query.get(id_prod)
     if not product:
