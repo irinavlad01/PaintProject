@@ -77,10 +77,10 @@ def one_user(id_utilizator):
 
 
 @app.route('/users/add', methods = ['POST'])
-@token_required
-def create_user(current_user):
-    if not current_user.admin:
-       return jsonify({'message' : 'Must be an admin to perform that function'})
+# @token_required
+def create_user():
+    # if not current_user.admin:
+    #    return jsonify({'message' : 'Must be an admin to perform that function'})
     
     data = request.get_json()
 
@@ -140,7 +140,7 @@ def login():
         return make_response('Could not verify. User does not exist.', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
         #cand nu exista un anumit user
     if check_password_hash(user.parola, auth.password):
-        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 1)}, app.config['SECRET_KEY'], algorithm='HS256')
+        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 60)}, app.config['SECRET_KEY'], algorithm='HS256')
 
         return jsonify({'token' : token})
     else: 

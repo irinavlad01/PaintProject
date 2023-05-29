@@ -8,6 +8,7 @@ import {Link, Route, Routes} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Account from './components/Account';
 import Orders from './components/Orders';
+import Register from './components/Register';
 
 function App() {
   const[isAuth, setIsAuth] = useState(false)
@@ -36,6 +37,7 @@ function App() {
             )
           }
           <li><Link to="/cos">Coșul tău</Link></li>
+          <li><Link to="/inregistrare">Înregistrare</Link></li>
         </ul>
       </nav>
       <div>
@@ -47,6 +49,7 @@ function App() {
           <Route path="/cos" element={<Cart/>}></Route>
           <Route path="/cont" element={<Account/>}></Route>
           <Route path="/comenzi" element={<Orders/>}></Route>
+          <Route path="/inregistrare" element={<Register/>}></Route>
         </Routes>
       </div>
     </>
