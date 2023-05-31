@@ -1,6 +1,6 @@
 from api import app, db
 from flask import request, jsonify, make_response
-from api.models import Utilizatori, Produse, Cos, DetaliiCos, Comenzi, ComenziPersonalizate
+from api.models import Utilizatori, Produse, Cos, DetaliiCos, Comenzi, Stocuri, Imagini
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 import datetime
@@ -77,11 +77,7 @@ def one_user(id_utilizator):
 
 
 @app.route('/users/add', methods = ['POST'])
-# @token_required
 def create_user():
-    # if not current_user.admin:
-    #    return jsonify({'message' : 'Must be an admin to perform that function'})
-    
     data = request.get_json()
 
     hashed_pwd = generate_password_hash(data['parola'], method="sha256")
@@ -240,8 +236,6 @@ def get_all_products():
         produs_data['categorie'] = produs.categorie
         produs_data['pret'] = produs.pret 
         produs_data['descriere'] = produs.descriere
-        produs_data['imagine'] = produs.imagine
-        produs_data['stoc'] = produs.stoc
         produs_data['data_lansare'] = produs.data_lansare
         output.append(produs_data)
 
@@ -262,8 +256,6 @@ def get_one_product(id_prod):
     product_data['categorie'] = product.categorie
     product_data['pret'] = product.pret 
     product_data['descriere'] = product.descriere
-    product_data['imagine'] = product.imagine
-    product_data['stoc'] = product.stoc
     product_data['data_lansare'] = product.data_lansare
 
     return jsonify({'produs' : product_data})
@@ -276,28 +268,13 @@ def create_products(current_user):
         return jsonify({'message' : 'Acces restrictionat! Nu puteti crea produse daca nu sunteti administrator'})
     
     data = request.get_json()
-    product = Produse(nume = data['nume'], categorie = data['categorie'], pret = data['pret'], descriere = data['descriere'], imagine = data['imagine'])
+    product = Produse(nume = data['nume'], categorie = data['categorie'], pret = data['pret'], descriere = data['descriere'])
 
     db.session.add(product)
     db.session.commit()
 
     return jsonify({'message' : f'Produs adaugat cu succes!'})
 
-#Update al stocului pe un anumit produs
-@app.route('/products/stoc/<id_prod>', methods = ['OPTIONS', 'PUT'])
-@token_required
-def update_product_stoc(current_user, id_prod):
-    if not current_user.admin:
-        return jsonify({'message' : 'Acces restrictionat! Nu puteti actualiza produse daca nu sunteti administrator!'}), 401
-    product = Produse.query.get(id_prod)
-    if not product:
-        return jsonify({'message' : 'Produsul nu exista!'})
-
-    product.stoc = True
-    db.session.commit()
-
-    response = jsonify({'message' : 'Stocul produsului a fost readus la 1'})
-    return response
 
 @app.route('/products/<id_prod>', methods = ['OPTIONS', 'PUT'])
 @token_required
@@ -312,6 +289,9 @@ def update_product(current_user, id_prod):
     data = request.get_json()
 
     product.nume = data['nume']
+    product.pret = data['pret']
+    product.descriere = data['descriere']
+    product.categorie = data['categorie']
     db.session.commit()
     return jsonify({'message' : 'Numele produsului a fost actualizat!'})
 
@@ -325,12 +305,67 @@ def delete_product(current_user, id_prod):
     if not product: 
         return jsonify({'message' : 'Produsul nu exista!'})
 
+    #prima data stergem toate instantele care imprumuta cheie straina de la produs
     DetaliiCos.query.filter_by(id_produs = id_prod).delete()
+    Stocuri.query.filter_by(id_produs = id_prod).delete()
+    Imagini.query.filter_by(id_produs = id_prod).delete()
 
     db.session.delete(product)
     db.session.commit()
 
     return jsonify({'message' : 'Produs sters!'})    
+
+#--> ENPOINTS STOCURI DE PRODUSE SI IMAGINILE ACESTORA
+#Adauga detalii despre stocurile produselor, combinatii de culoare, marime si stoc
+@app.route('/products/stock/<id_prod>', methods = ['POST'])
+@token_required
+def add_stocks(current_user, id_prod):
+    if not current_user.admin:
+        return jsonify({'message' : 'Acces restrictionat! Nu puteti modifica detaliile despre stoc daca nu sunteti administrator!'})
+    
+    produs = Produse.query.get(id_prod)
+    if not produs:
+        return jsonify({'message' : 'Produsul nu exista!'})
+    
+    data = request.get_json()
+    stocuri = Stocuri(id_produs=produs.id, marime=data['marime'], culoare=data['culoare'], stoc=data['stoc'])
+    db.session.add(stocuri)
+    db.session.commit()
+    return jsonify({'message' : f'Detalii despre stocul produsului {produs.nume} au fost adaugate!'})
+
+#Face update a stocului pentru anumite marimi si culori trimise prin formular!
+@app.route('/products/stock/<id_prod>', methods=['PUT'])
+@token_required
+def update_stocks(current_user, id_prod):
+    if not current_user.admin:
+        return jsonify({'message' : 'Acces restrictionat! Nu puteti modifica detaliile despre stoc daca nu sunteti administrator!'})
+    produs = Produse.query.get(id_prod)
+    if not produs:
+        return jsonify({'message' : 'Produsul nu exista!'})
+    
+    data = request.get_json()
+    stocuri = Stocuri.query.filter_by(id_produs=produs.id, marime=data['marime'], culoare=data['culoare']).first()
+    stocuri.stoc = data['stoc']
+    db.session.commit()
+    return jsonify({'message' : f'Stocul produsului {produs.nume} a fost actualizat cu succes!'})
+
+#Adauga imagini pentru produse
+@app.route('/products/images/<id_prod>', methods=['POST'])
+@token_required
+def add_images(current_user, id_prod):
+    if not current_user.admin:
+        return jsonify({'message' : 'Acces restrictionat! Nu puteti modifica detaliile despre stoc daca nu sunteti administrator!'})
+    produs = Produse.query.get(id_prod)
+    if not produs:
+        return jsonify({'message' : 'Produsul nu exista!'})
+    
+    data = request.get_json()
+    imagine = Imagini(id_produs = id_prod, nume = data['nume'])
+
+    db.session.add(imagine)
+    db.session.commit()
+    return jsonify({'message' : f'Imagine adaugata cu succes pentru produsul {produs.nume}'})
+    
 
 #-->ENDPOINTS DETALII COS, PRODUSELE ADUAGATE IN COS SI GESTIONAREA ACESTORA
 
@@ -346,13 +381,16 @@ def add_to_cart(current_user, id_produs):
         db.session.add(cos)
         db.session.commit()
 
-    if not produs or produs.stoc == False:
+    data = request.get_json()
+    stocuri = Stocuri.query.filter_by(id_produs=id_produs, marime=data['marime'], culoare=data['culoare']).first()
+
+    if not produs or stocuri.stoc == 0:
         return jsonify({'message' : 'Produsul nu (mai) este disponibil'}), 404
     
-    if DetaliiCos.query.filter_by(id_cos = cos.id, id_produs = id_produs).first() and cos.activ == True:
-        return jsonify({'message' : f'Produsul {produs.nume} a fost adaugat deja in cosul utilizatorului {current_user.prenume}'})
+    # if DetaliiCos.query.filter_by(id_cos = cos.id, id_produs = id_produs).first() and cos.activ == True:
+    #     return jsonify({'message' : f'Produsul {produs.nume} a fost adaugat deja in cosul utilizatorului {current_user.prenume}'})
     
-    detalii_cos = DetaliiCos(id_cos = cos.id, id_produs = produs.id)
+    detalii_cos = DetaliiCos(id_cos = cos.id, id_produs = produs.id, marime=data['marime'], culoare=data['culoare'], descriere=data['descriere'])
     db.session.add(detalii_cos)
     db.session.commit()
     return jsonify({'message' : f'Produsul {produs.nume} adaugat cu succes in cosul {cos.id}!'})
@@ -372,8 +410,6 @@ def added_products(current_user):
         product_data['categorie'] = product.categorie
         product_data['pret'] = product.pret 
         product_data['descriere'] = product.descriere
-        product_data['imagine'] = product.imagine
-        product_data['stoc'] = product.stoc
         product_data['data_lansare'] = product.data_lansare
         output.append(product_data)
     
@@ -436,7 +472,7 @@ def show_orders(current_user):
                 'id_produs': produs.id,
                 'nume_produs': produs.nume,
                 'pret_produs': produs.pret,
-                'imagine_produs' : produs.imagine
+                # 'imagine_produs' : produs.imagine
             }
             produse_comanda.append(produs_data)
 

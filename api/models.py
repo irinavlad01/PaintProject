@@ -14,8 +14,6 @@ class Utilizatori(db.Model):
 
     #relatia one-to-one to tabela cos
     cos = db.relationship('Cos', backref='utilizatori', uselist=False, lazy=True)
-    comenzi_personalizate = db.relationship('ComenziPersonalizate', backref='utilizatori', uselist=False, lazy=True)
-
     def __repr__(self):
         return f"Utilizatori('{self.nume}', '{self.prenume}', '{self.email}', '{self.parola}', '{self.adresa_domiciliu}', '{self.telefon}', '{self.admin}')"
 
@@ -35,13 +33,33 @@ class Produse(db.Model):
     categorie = db.Column(db.String(50), nullable = False)
     pret = db.Column(db.Float(precision = 2), nullable = False)
     descriere = db.Column(db.String(150), nullable = False)
-    imagine = db.Column(db.String(50), nullable = False, unique=True) #imaginea sa fie unica
     data_lansare = db.Column(db.DateTime, default=datetime.utcnow)
-    stoc = db.Column(db.Boolean, default = True, nullable = False)
     detalii_cos = db.relationship('DetaliiCos', backref = 'produs', uselist = True)
+    imagini = db.relationship('Imagini', backref = 'produs', uselist = True)
+    stocuri = db.relationship('Stocuri', backref='produs', uselist=True)
 
     def __repr__(self):
-        return f"Produse('{self.id}', {self.nume}', '{self.categorie}', '{self.pret}', '{self.descriere}', '{self.imagine}', '{self.data_lansare}', {self.stoc}')"
+        return f"Produse('{self.id}', {self.nume}', '{self.categorie}', '{self.pret}', '{self.descriere}', '{self.data_lansare}')"
+
+class Imagini(db.Model):
+    __tablename__ = 'imagini'
+    id = db.Column(db.Integer, primary_key = True)
+    id_produs = db.Column(db.Integer, db.ForeignKey('produse.id'), nullable = False)
+    nume = db.Column(db.String(50), nullable = False)
+
+    def __repr__(self):
+        return f"Imagini('{self.id}', '{self.nume}', '{self.id_produs}')"
+
+class Stocuri(db.Model):
+    __tablename__ = 'stocuri'
+    id = db.Column(db.Integer, primary_key = True)
+    id_produs = db.Column(db.Integer, db.ForeignKey('produse.id'), nullable = False)
+    marime = db.Column(db.String(2), nullable=False)
+    culoare = db.Column(db.String(20), nullable=False)
+    stoc = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"Stocuri('{self.id}', '{self.id_produs}', '{self.marime}', '{self.culoare}', '{self.stoc}')"
 
 class Cos(db.Model):
     __tablename__ = 'cos'
@@ -65,20 +83,15 @@ class DetaliiCos(db.Model):
     id_cos = db.Column(db.Integer, db.ForeignKey('cos.id'), nullable = False)
     #cheie straina produse 
     id_produs = db.Column(db.Integer, db.ForeignKey('produse.id'), nullable = False)
+    descriere = db.Column(db.String(200), nullable=False)
+    marime = db.Column(db.String(2), nullable=False)
+    culoare = db.Column(db.String(20), nullable=False)
 
     def __repr__(self):
-        return f"DetaliiCos('{self.id_cos}', '{self.id_produs}')"
+        return f"DetaliiCos('{self.id}', '{self.id_cos}', '{self.id_produs}', '{self.marime}', '{self.culoare}')"
     
 class Comenzi(db.Model):
     __tablename__ = 'comenzi'
     id = db.Column(db.Integer, primary_key = True)
     id_cos = db.Column(db.Integer, db.ForeignKey('cos.id'), nullable = False)
     total = db.Column(db.Float(precision = 2), nullable = False)
-
-class ComenziPersonalizate(db.Model):
-    __tablename__ = 'comenzi_personalizate'
-    id = db.Column(db.Integer, primary_key = True)
-    id_utilizator = db.Column(db.String(36), db.ForeignKey('utilizatori.id'), nullable = False)
-    articol = db.Column(db.String(50), nullable=False)
-    culoare = db.Column(db.String(20), nullable=False)
-    descriere = db.Column(db.String(200), nullable=False)
