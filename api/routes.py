@@ -128,19 +128,19 @@ def login():
     auth = request.authorization
 
     if not auth or not auth.username or not auth.password:
-        return make_response('Could not verify. No data provided.', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+        return make_response('Credentiale invalide, va rugam ssa furnizati un email si o parola! Incercati din nou', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
         #cand nu primim date de autentificare
     user = Utilizatori.query.filter_by(email = auth.username).first()
 
     if not user:
-        return make_response('Could not verify. User does not exist.', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+        return make_response('Email incorect sau utilizatorul nu exista! Incercati din nou!', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
         #cand nu exista un anumit user
     if check_password_hash(user.parola, auth.password):
         token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 60)}, app.config['SECRET_KEY'], algorithm='HS256')
 
         return jsonify({'token' : token})
     else: 
-        return make_response('Could not verify. Password incorrect.', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+        return make_response('Parola incorecta! Incercati din nou!', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
    #cand parola este incorecta 
 
 

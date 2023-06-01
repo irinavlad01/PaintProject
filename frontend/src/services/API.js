@@ -45,7 +45,6 @@ const API = {
             }
         })
         .then(response => response.data)
-        .catch(error => console.log(error))
     }, 
 
     addToCart(id, productOptions){
@@ -57,6 +56,16 @@ const API = {
         })
         .then(response => response.data)
     }, 
+
+    deleteFromCart(id){
+        return axios.delete(`${BASE_URL}/cart/delete_product/${id}`, {
+            headers: {
+                'Content-Type' : 'application/json',
+                'x-access-token' : `${token}`
+            }
+        })
+        .then(response => response.data)
+    },
 
     cartProducts(){
         return axios.get(`${BASE_URL}/cart/products`, {

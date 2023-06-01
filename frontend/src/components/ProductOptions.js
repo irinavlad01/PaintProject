@@ -3,9 +3,17 @@ import API from '../services/API';
 import {useNavigate} from 'react-router-dom';
 
 function ProductOptions(props) {
-    const {id} = props
+    const {id} = props;
     const navigate = useNavigate();
     const [stocks, setStocks] = useState([]);
+
+    useEffect( () => {
+        API.productStocks(id)
+        .then(data => {
+            console.log(data.stocuri);
+            setStocks(data.stocuri);
+        })
+    }, [id]);
 
     const [productOptions, setProductOptions] = useState({
         culoare: '',
@@ -22,6 +30,9 @@ function ProductOptions(props) {
             ...prevOptions, 
             culoare: color
         }));
+
+        //pentru testare
+        console.log(productOptions);
 
         const sizesForColor = stocks
         .filter((stock) => stock.culoare === color && stock.stoc > 0)
@@ -46,6 +57,7 @@ function ProductOptions(props) {
             ...prevOptions, 
             marime: size
         }))
+        console.log(productOptions);
     }
 
     const handleDescriptionChange = (e) =>{
@@ -54,28 +66,28 @@ function ProductOptions(props) {
             ...prevOptions, 
             descriere: description
         }))
+        console.log(productOptions);
     }
 
-    useEffect( () => {
-        API.productStocks(id)
-        .then(data => {
-            console.log(data.stocuri);
-            setStocks(data.stocuri);
-        })
-    }, [id]);
 
-    const addToCart = () => {
-        API.addToCart(id, productOptions)
-        .then(resp => console.log(resp))
-        .catch(error => {
-          if (error.response && error.response.status === 401){
-            navigate("/login", {state: { message: "Trebuie sa fii autentificat/a pentru a adauga in cos articole!"}})
-        }});
-      }
+    const addToCart = async () => {
+        try{
+            const response = await API.addToCart(id, productOptions)
+            console.log(response)
+        }
+        catch (error) {
+            if (error.response && error.response.status === 401){
+                navigate("/login", {state: { message: "Trebuie sa fii autentificat/a pentru a adauga in cos articole!"}})
+        }}};
 
+    const handleSubmit = (e) =>{
+        e.preventDefault();
+        addToCart();
+        navigate("/cos", {state: {message: "Produsul a fost adaugat!"}});
+    }
   return (
     <div>
-      <form onSubmit={addToCart}>
+      <form onSubmit={handleSubmit}>
         <select name="culoare" onChange={handleColorChange}>
             <option value="">Culori disponibile</option>
             {uniqueColors.map( color => (
@@ -92,7 +104,7 @@ function ProductOptions(props) {
                 </option>
             ))}
         </select>
-        <textarea maxLength={200} onChange={handleDescriptionChange}></textarea>
+        <textarea maxLength={200} onBlur={handleDescriptionChange}></textarea>
         <button type="submit">Adaugă în coș</button>
       </form>
     </div>
