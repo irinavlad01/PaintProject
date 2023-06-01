@@ -3,8 +3,9 @@ import { useLocation } from 'react-router-dom'
 import API from '../services/API'
 
 function Login() {
-    const [email, setEmail] = useState("")
-    const [parola, setParola] = useState("")
+    const [email, setEmail] = useState("");
+    const [parola, setParola] = useState("");
+    const [authError, setAuthError] = useState("");
 
     const location = useLocation();
     const message = location.state && location.state.message;
@@ -17,11 +18,17 @@ function Login() {
             console.log(data.token);
             window.location.href = '/cont';
         })
+        .catch(error => {
+          if(error.response && error.response.status === 401){
+            setAuthError(error.response.data);
+          }
+        })
     }
 
   return (
     <div>
-      {message && <p className="alert alert-success w-25" role="alert">{message}</p>}
+      {message && <p className="alert alert-danger w-25" role="alert">{message}</p>}
+      {authError && <p className="alert alert-danger w-25" role="alert">{authError}</p>}
       <h1>Log in</h1>
       <form onSubmit={handleLogin}>
         <label htmlFor="email">Email:</label>
