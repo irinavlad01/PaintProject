@@ -23,7 +23,7 @@ def token_required(f):
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms = ['HS256'])
             current_user = Utilizatori.query.filter_by(id=data['id']).first()
         except:
-            return make_response(jsonify({'message' : "Token expirat sau nu sunteti autentificat!"}), 401)
+            return make_response(jsonify({'message' : 'Token expirat sau nu sunteti autentificat!'}), 401)
     
         return f(current_user, *args, **kwargs)
     
@@ -349,6 +349,27 @@ def update_stocks(current_user, id_prod):
     db.session.commit()
     return jsonify({'message' : f'Stocul produsului {produs.nume} a fost actualizat cu succes!'})
 
+#Returneaza marimile si culorile disoponibile pentru fiecare produs, dar si stocurile
+@app.route('/products/stock/<id_prod>', methods=['GET'])
+def get_stocks(id_prod):
+    produs = Produse.query.get(id_prod)
+
+    if not produs: 
+        return jsonify({'message' : 'Produsul nu exista!'})
+    
+    stocuri_prod = Stocuri.query.filter_by(id_produs = id_prod).all()
+    output = []
+
+    for stoc_prod in stocuri_prod:
+        stoc_data = {}
+        stoc_data['id'] = stoc_prod.id
+        stoc_data['marime'] = stoc_prod.marime
+        stoc_data['culoare'] = stoc_prod.culoare
+        stoc_data['stoc'] = stoc_prod.stoc
+        output.append(stoc_data)
+
+    return jsonify({'stocuri' : output})
+
 #Adauga imagini pentru produse
 @app.route('/products/images/<id_prod>', methods=['POST'])
 @token_required
@@ -387,9 +408,6 @@ def add_to_cart(current_user, id_produs):
     if not produs or stocuri.stoc == 0:
         return jsonify({'message' : 'Produsul nu (mai) este disponibil'}), 404
     
-    # if DetaliiCos.query.filter_by(id_cos = cos.id, id_produs = id_produs).first() and cos.activ == True:
-    #     return jsonify({'message' : f'Produsul {produs.nume} a fost adaugat deja in cosul utilizatorului {current_user.prenume}'})
-    
     detalii_cos = DetaliiCos(id_cos = cos.id, id_produs = produs.id, marime=data['marime'], culoare=data['culoare'], descriere=data['descriere'])
     db.session.add(detalii_cos)
     db.session.commit()
@@ -399,21 +417,26 @@ def add_to_cart(current_user, id_produs):
 @app.route('/cart/products', methods = ['GET'])
 @token_required
 def added_products(current_user):
-    products = db.session.query(Produse).join(DetaliiCos).join(Cos).filter(Cos.id_utilizator == current_user.id, Cos.activ == True).all()
-
+    cos = Cos.query.filter_by(id_utilizator=current_user.id, activ=True).first()
+    if not cos:
+        return jsonify({'message': f'Utilizatorul {current_user.prenume} nu are un coș activ!'})
+    
+    detalii_cos = DetaliiCos.query.filter_by(id_cos=cos.id).all()
     output = []
 
-    for product in products:
-        product_data = {}
-        product_data['id'] = product.id
-        product_data['nume'] = product.nume
-        product_data['categorie'] = product.categorie
-        product_data['pret'] = product.pret 
-        product_data['descriere'] = product.descriere
-        product_data['data_lansare'] = product.data_lansare
-        output.append(product_data)
+    for detaliu in detalii_cos:
+        date_produs = {}
+        date_produs['id'] = detaliu.produs.id
+        date_produs['nume'] = detaliu.produs.nume
+        date_produs['descriere'] = detaliu.produs.descriere
+        date_produs['pret'] = detaliu.produs.pret
+        date_produs['categorie'] = detaliu.produs.categorie
+        date_produs['descriere_comanda'] = detaliu.descriere
+        date_produs['culoare'] = detaliu.culoare
+        date_produs['marime'] = detaliu.marime
+        output.append(date_produs)
     
-    return jsonify({'produse' : output})
+    return jsonify({'produse': output})
 
 @app.route('/cart/delete_product/<id_produs>', methods = ['DELETE'])
 @token_required
