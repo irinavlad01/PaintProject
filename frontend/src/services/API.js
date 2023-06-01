@@ -48,8 +48,8 @@ const API = {
         .catch(error => console.log(error))
     }, 
 
-    addToCart(id){
-        return axios.post(`${BASE_URL}/cart/add_product/${id}`, null, {
+    addToCart(id, productOptions){
+        return axios.post(`${BASE_URL}/cart/add_product/${id}`, productOptions, {
             headers: {
                 'Content-Type' : 'application/json',
                 'x-access-token' : `${token}`
@@ -116,6 +116,16 @@ const API = {
             headers: {
                 'Conent-Type' : 'application/json',
                 'x-access-token' : `${token}`
+            }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error))
+    }, 
+
+    productStocks(id){
+        return axios.get(`${BASE_URL}/products/stock/${id}`, {
+            headers: {
+                'Content-Type' : 'application/json'
             }
         })
         .then(response => response.data)

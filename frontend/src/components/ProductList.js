@@ -5,11 +5,11 @@ import {Link} from 'react-router-dom';
 import API from '../services/API';
 
 function ProductList() {
-    const [products, setProducts] = useState([])
-    const [categories, setCategories] = useState([])
+    const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
 
-    const[selectedCategory, setSelectedCategory] = useState('')
-    const[filteredProducts, setFilteredProducts] = useState(products)
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [filteredProducts, setFilteredProducts] = useState(products);
     const [sortAsc, setSortAsc] = useState(true);
 
     useEffect( () => {
@@ -51,7 +51,7 @@ function ProductList() {
       <h1>Lista produse</h1>
       {/* <button><Link to={`/products/create`}>Add product</Link></button> */}
       <button onClick={handleSort}>
-        {sortAsc ? 'Cele mai recente' : 'Primele adaugari'}
+        {sortAsc ? 'Primele adaugari': 'Cele mai recente' }
       </button>
       <select value={selectedCategory} onChange={handleCategoryChange} className="form-control w-25">
       <option value="">Toate categoriile</option>

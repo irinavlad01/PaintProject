@@ -35,10 +35,12 @@ function Cart() {
   return (
     <div>
         <ul>
-        {isAuth ? (addedProducts.map(product => (
-            <li key={product.id}>
+        {isAuth ? (addedProducts.map((product, index) => (
+            <li key={`${product.id}-${index}`}>
                 <p>{product.nume}</p>
-                <p>{product.categorie}</p>
+                <p>{product.descriere_comanda}</p>
+                <p>{product.culoare}</p>
+                <p>{product.marime}</p>
                 <p>{product.pret}</p>
             </li>
       )))
