@@ -1,13 +1,13 @@
 import React from 'react'
 import {useState, useEffect} from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import API from '../services/API';
 
 
 function Cart() {
     const[isAuth, setIsAuth] = useState(false);
     const[addedProducts, setAddedProducts] = useState([]);
-    const[message, setMessage] = useState("");
+    // const[message, setMessage] = useState(""); pentru mesajul ca comanda a fost plasata cu succes
 
     //cand se adauga produs in cos, din product options
     const location = useLocation();
@@ -29,16 +29,16 @@ function Cart() {
     }
   }, [deletedProduct]);
 
-  const handleOrder = () => {
-    API.placeOrder().then(data => {
-        setMessage(data.message)
-    })
-    .catch(error => {
-      if(error.response && error.response.message === 401){
-        setIsAuth(false);
-      }}
-    )
-  }
+  // const handleOrder = () => {
+  //   API.placeOrder().then(data => {
+  //       setMessage(data.message)
+  //   })
+  //   .catch(error => {
+  //     if(error.response && error.response.message === 401){
+  //       setIsAuth(false);
+  //     }}
+  //   )
+  // }
 
   const handleDelete = (id) =>{
       API.deleteFromCart(id)
@@ -64,7 +64,7 @@ function Cart() {
                 <p>{product.culoare}</p>
                 <p>{product.marime}</p>
                 <p>{product.pret}</p>
-                <button onClick={() => handleDelete(product.id)} className='btn btn-danger'>Sterge artciol</button>
+                <button onClick={() => handleDelete(product.id_adaugare)} className='btn btn-danger'>Sterge artciol</button>
             </li>
         );
         } 
@@ -72,9 +72,11 @@ function Cart() {
           })) : (<p>Cosul este gol.</p>)) 
         : (<p>Trebuie să fiți autentificat pentru a vizualiza cosul.</p>)}
     </ul>
-    {isAuth && addedProducts && addedProducts.length > 0 ? (<button className="btn btn-primary" onClick={handleOrder}>Comandă acum!</button>)
-    : null}
-    {message &&<p className="alert alert-success w-25" role="alert">{message}</p>}
+    {/* {isAuth && addedProducts && addedProducts.length > 0 ? (<button className="btn btn-primary" onClick={handleOrder}>Comandă acum!</button>)
+    : null} */}
+    {isAuth && addedProducts && addedProducts.length > 0 ? (<Link to="/comanda">Continua la finalizarea comenzii</Link>) 
+    : null }
+    {/* {message &&<p className="alert alert-success w-25" role="alert">{message}</p>} */}
 
     </>
   )

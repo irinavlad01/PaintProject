@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import Account from './components/Account';
 import Orders from './components/Orders';
 import Register from './components/Register';
+import OrderDetails from './components/OrderDetails';
 
 function App() {
   const[isAuth, setIsAuth] = useState(false)
@@ -50,6 +51,7 @@ function App() {
           <Route path="/cont" element={<Account/>}></Route>
           <Route path="/comenzi" element={<Orders/>}></Route>
           <Route path="/inregistrare" element={<Register/>}></Route>
+          <Route path="/comanda" element={<OrderDetails/>}></Route>
         </Routes>
       </div>
     </>

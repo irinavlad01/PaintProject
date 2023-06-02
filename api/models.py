@@ -95,3 +95,5 @@ class Comenzi(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     id_cos = db.Column(db.Integer, db.ForeignKey('cos.id'), nullable = False)
     total = db.Column(db.Float(precision = 2), nullable = False)
+    adresa_livrare = db.Column(db.String(100), nullable = False)
+    status = db.Column(db.String(20), nullable = False, default="trimisa")

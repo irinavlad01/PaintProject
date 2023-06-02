@@ -426,6 +426,7 @@ def added_products(current_user):
 
     for detaliu in detalii_cos:
         date_produs = {}
+        date_produs['id_adaugare'] = detaliu.id
         date_produs['id'] = detaliu.produs.id
         date_produs['nume'] = detaliu.produs.nume
         date_produs['descriere'] = detaliu.produs.descriere
@@ -438,15 +439,15 @@ def added_products(current_user):
     
     return jsonify({'produse': output})
 
-@app.route('/cart/delete_product/<id_produs>', methods = ['DELETE'])
+@app.route('/cart/delete_product/<id_adaugare>', methods = ['DELETE'])
 @token_required
-def delete_from_cart(current_user, id_produs):
+def delete_from_cart(current_user, id_adaugare):
     cos = Cos.query.filter_by(id_utilizator=current_user.id, activ=True).first()
 
     if not cos: 
         return jsonify({'message' : f'Utilizatorul {current_user.prenume} nu are un cos activ'})
     
-    produs = DetaliiCos.query.filter_by(id_produs = id_produs, id_cos=cos.id).first()
+    produs = DetaliiCos.query.filter_by(id = id_adaugare, id_cos=cos.id).first()
 
     if not produs: 
         return jsonify({'message' : 'Posibila eroare sau produsul a fost deja sters'})
@@ -461,21 +462,38 @@ def delete_from_cart(current_user, id_produs):
 @token_required
 def place_order(current_user):
     cos = Cos.query.filter_by(id_utilizator = current_user.id, activ=True).first()
-    produse = db.session.query(Produse).join(DetaliiCos).join(Cos).filter(Cos.id_utilizator == current_user.id, DetaliiCos.cos.has(activ=True)).all()
+    # produse = db.session.query(Produse).join(DetaliiCos).join(Cos).filter(Cos.id_utilizator == current_user.id, DetaliiCos.cos.has(activ=True)).all()
+    produse_cos = db.session.query(DetaliiCos).join(Cos).filter(Cos.id_utilizator == current_user.id, DetaliiCos.cos.has(activ=True)).all()
 
-    if not produse: 
+    if not produse_cos: 
         return jsonify({'message' : f'Nu exista produse in cosul {cos.id} pentru a plasa o comanda'})
     
     total = 19.99 #costul standard de livrare
-    for produs in produse:
-        total += produs.pret
-        produs.stoc = False
+    for produs_cos in produse_cos:
+        total += produs_cos.produs.pret
 
-    comanda = Comenzi(id_cos = cos.id, total = total)
+    data = request.get_json()
+    comanda = Comenzi(id_cos = cos.id, total = total, adresa_livrare = data['adresa_livrare'])
     db.session.add(comanda)
     cos.activ = False
     db.session.commit()
     return jsonify({'message' : 'Comanda a fost plasata cu succes'})
+
+@app.route('/order/update/<id_comanda>', methods=['PUT'])
+@token_required
+def update_order_status(current_user, id_comanda):
+    if not current_user.admin:
+        return jsonify({'message' : 'Acces restrictionat! Nu aveti acces la actualizarea comenzilor plasate de clienti!'})
+
+    data = request.get_json()
+    comanda = Comenzi.query.get(id_comanda)
+    if not comanda: 
+        return jsonify({'message' : 'Comanda nu a putut fi gasita!'})
+    
+    comanda.status = data['status']
+    db.session.commit()
+    return jsonify({'message' : f'Statusul comenzii cu numarul {comanda.id} a fost actualizat cu succes!'})
+
 
 @app.route('/orders/show', methods=['GET'])
 @token_required
