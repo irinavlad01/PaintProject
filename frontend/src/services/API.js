@@ -78,8 +78,8 @@ const API = {
         // .catch(error => console.log(error))
     }, 
 
-    placeOrder(){
-        return axios.post(`${BASE_URL}/order/create`, null, {
+    placeOrder(address){
+        return axios.post(`${BASE_URL}/order/create`, address, {
             headers: {
                 'Conent-Type' : 'application/json', 
                 'x-access-token' : `${token}`
