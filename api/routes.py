@@ -471,6 +471,8 @@ def place_order(current_user):
     total = 19.99 #costul standard de livrare
     for produs_cos in produse_cos:
         total += produs_cos.produs.pret
+        detalii_stoc = Stocuri.query.filter_by(id_produs = produs_cos.produs.id, marime = produs_cos.marime, culoare = produs_cos.culoare).first()
+        detalii_stoc.stoc -= 1
 
     data = request.get_json()
     comanda = Comenzi(id_cos = cos.id, total = total, adresa_livrare = data['adresa_livrare'])
@@ -505,6 +507,7 @@ def show_orders(current_user):
         comanda_data = {}
         comanda_data['id_comanda'] = comanda.id
         comanda_data['id_cos'] = comanda.cos.id
+        comanda_data['status'] = comanda.status
 
         produse_comanda = []
         for detaliu_cos in comanda.cos.detalii_cos:
@@ -513,6 +516,7 @@ def show_orders(current_user):
                 'id_produs': produs.id,
                 'nume_produs': produs.nume,
                 'pret_produs': produs.pret,
+                'descriere_comanda' : detaliu_cos.descriere
                 # 'imagine_produs' : produs.imagine
             }
             produse_comanda.append(produs_data)
