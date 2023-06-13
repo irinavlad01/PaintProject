@@ -527,4 +527,35 @@ def show_orders(current_user):
     return jsonify({'comenzi': output})
 
 
+#Pentru a afisa comenzile unui anumit utilizator. DOAR PENTRU ADMIN 
+@app.route('/orders/show/<id_utilizator>', methods=['GET'])
+@token_required
+def show_user_orders(current_user, id_utilizator):
+    if not current_user.admin:
+        return jsonify({'message' : 'Acces restrictionat! Doar administratorul poate vizualiza comenzile plasate de catre clienti!'})
+    
+    comenzi = db.session.query(Comenzi).join(Cos).filter(Cos.id_utilizator == id_utilizator).all()
 
+    output = []
+    for comanda in comenzi:
+        comanda_data = {}
+        comanda_data['id_comanda'] = comanda.id
+        comanda_data['id_cos'] = comanda.cos.id
+        comanda_data['status'] = comanda.status
+
+        produse_comanda = []
+        for detaliu_cos in comanda.cos.detalii_cos:
+            produs = detaliu_cos.produs
+            produs_data = {
+                'id_produs': produs.id,
+                'nume_produs': produs.nume,
+                'pret_produs': produs.pret,
+                'descriere_comanda' : detaliu_cos.descriere
+                # 'imagine_produs' : produs.imagine
+            }
+            produse_comanda.append(produs_data)
+
+        comanda_data['produse_comanda'] = produse_comanda
+        output.append(comanda_data)
+
+    return jsonify({'comenzi': output})

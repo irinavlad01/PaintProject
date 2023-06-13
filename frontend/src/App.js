@@ -10,18 +10,36 @@ import Account from './components/Account';
 import Orders from './components/Orders';
 import Register from './components/Register';
 import OrderDetails from './components/OrderDetails';
+import CustomerOrders from './components/CustomerOrders';
+import API from './services/API';
 
 function App() {
-  const[isAuth, setIsAuth] = useState(false)
+  const [isAuth, setIsAuth] = useState(false)
+  const [admin, setAdmin] = useState(false);
 
   useEffect( () => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     if(token){
       setIsAuth(true);
-    } 
 
-    console.log(token) //pentru testare doar
-  }, []);
+      const tokenPayload = token.split('.')[1];
+      const decodedToken = atob(tokenPayload);
+      const userId = JSON.parse(decodedToken).id;
+      
+      API.getUserById(userId)
+          .then(data => {setAdmin(data.user.admin); console.log(data.user.admin)})
+          .catch(error => {
+              if(error.response && error.response.status === 404){
+                  console.log("Utilizatorul nu exista!");
+              }
+          })
+      }
+      else{
+          console.log("Nu sunteti autentificat/ă!");
+      }
+      
+      console.log(token) //pentru testare doar
+    }, []);
 
 
   return (
@@ -38,7 +56,9 @@ function App() {
             )
           }
           <li><Link to="/cos">Coșul tău</Link></li>
-          <li><Link to="/inregistrare">Înregistrare</Link></li>
+          {
+            admin && (<li><Link to="/gestiune">Gestiune comenzi</Link></li>)
+          }
         </ul>
       </nav>
       <div>
@@ -52,6 +72,7 @@ function App() {
           <Route path="/comenzi" element={<Orders/>}></Route>
           <Route path="/inregistrare" element={<Register/>}></Route>
           <Route path="/comanda" element={<OrderDetails/>}></Route>
+          <Route path="/gestiune" element={<CustomerOrders/>}></Route>
         </Routes>
       </div>
     </>
