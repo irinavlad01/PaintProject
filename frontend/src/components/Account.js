@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import API from '../services/API'
 import Login from './Login'
 import Orders from './Orders';
+import Register from './Register';
 
 function Account() {
     const [user, setUser] = useState(null);
     const [message, setMessage] = useState("");
     const [loginForm, setLoginForm] = useState(false);
+    const [registerForm, setRegisterForm] = useState(false);
     const [orderList, setOrderList] = useState(false);
 
     useEffect( () => {
@@ -25,7 +27,7 @@ function Account() {
             })
         }
         else{
-            setMessage("Nu sunteți autentificat/ă!");
+            setMessage("Autentificati-vă pentru a vizualiza profilul sau creați un cont!");
         }
     }, []);
 
@@ -35,6 +37,14 @@ function Account() {
         }else{
             setLoginForm(false)
         }
+    }
+
+    const showRegisterForm = () => {
+      if(!registerForm){
+        setRegisterForm(true);
+      }else{
+        setRegisterForm(false);
+      }
     }
 
     const handleLogout = () =>{
@@ -54,8 +64,10 @@ function Account() {
     <>
       {message ? (<div>
         <p>{message}</p>
-        <button className="btn btn-primary" onClick={showLoginForm}>Log in</button>
+        <button className="btn btn-primary" onClick={showLoginForm}>Autentificare</button>
         {loginForm && <Login/>}
+        <button className="btn btn-success" onClick={showRegisterForm}>Inregistrare</button>
+        {registerForm && <Register/>}
       </div>) 
       : ( user && 
       <div>

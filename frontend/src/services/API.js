@@ -109,6 +109,17 @@ const API = {
         .catch(error => console.log(error))
     }, 
 
+    showOrdersForUser(id){
+        return axios.get(`${BASE_URL}/orders/show/${id}`, {
+            headers: {
+                'Conent-Type' : 'application/json',
+                'x-access-token' : `${token}`
+            }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error))
+    },
+
     updateProduct(id, productData){
         return axios.put(`${BASE_URL}/products/${id}`, productData, {
             headers: {
@@ -135,6 +146,17 @@ const API = {
         return axios.get(`${BASE_URL}/products/stock/${id}`, {
             headers: {
                 'Content-Type' : 'application/json'
+            }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error))
+    }, 
+
+    getAllUsers(){
+        return axios.get(`${BASE_URL}/users`, {
+            headers: {
+                'Content-Type' : 'application/json', 
+                'x-access-token' : `${token}`
             }
         })
         .then(response => response.data)
