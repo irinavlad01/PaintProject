@@ -38,7 +38,7 @@ function ProductUpdate(props) {
             <input type="text" className="form-control" value={pret} placeholder="Enter name"
             onChange = {(e) => setPret(e.target.value)}/>
 
-            <label htmlFor="nume" type="text" className="form-label">Desciere</label>
+            <label htmlFor="nume" type="text" className="form-label">Descriere</label>
             <input type="text" className="form-control" value={descriere } placeholder="Enter name"
             onChange = {(e) => setDescriere(e.target.value)}/>
 

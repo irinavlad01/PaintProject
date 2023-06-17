@@ -559,3 +559,14 @@ def show_user_orders(current_user, id_utilizator):
         output.append(comanda_data)
 
     return jsonify({'comenzi': output})
+
+@app.route('/order/delete/<id_comanda>', methods=['DELETE'])
+@token_required
+def delete_order(current_user, id_comanda):
+    if not current_user.admin:
+        return jsonify({'message' : 'Acces restrictionat! Trebuie sa fiti administrator pentru a anula comenzi!'})
+    
+    comanda = Comenzi.query.get(id_comanda)
+    db.session.delete(comanda)
+    db.session.commit()
+    return jsonify({'message' : 'Comanda anulata cu succes!'})

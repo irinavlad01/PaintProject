@@ -161,6 +161,28 @@ const API = {
         })
         .then(response => response.data)
         .catch(error => console.log(error))
+    }, 
+
+    updateOrder(id, statusData){
+        return axios.put(`${BASE_URL}/order/update/${id}`, statusData, {
+            headers: {
+                'Content-Type' : 'application/json', 
+                'x-access-token' : `${token}`
+            }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error))
+    }, 
+
+    deleteOrder(id){
+        return axios.delete(`${BASE_URL}/order/delete/${id}`, {
+            headers: {
+                'Content-Type' : 'application/json', 
+                'x-access-token' : `${token}`
+            }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error))
     }
 }
 
