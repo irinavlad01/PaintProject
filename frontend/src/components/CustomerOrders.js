@@ -42,7 +42,10 @@ function CustomerOrders() {
 
     const deleteOrder = (orderId) => {
       API.deleteOrder(orderId)
-      .then(resp => console.log(resp));
+      .then(resp => {
+        console.log(resp);
+        window.location.href = '/gestiune';
+     });
     }
 
 

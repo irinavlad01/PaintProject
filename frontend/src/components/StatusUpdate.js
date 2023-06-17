@@ -11,9 +11,9 @@ function StatusUpdate(props) {
     const statusData ={
       status: status
     }
-    
+
     API.updateOrder(props.orderId, statusData)
-    .then(resp => console.log(resp));
+    .then(resp => {console.log(resp); window.location.href = '/gestiune';});
   }
     
   return (

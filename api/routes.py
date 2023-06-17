@@ -387,6 +387,22 @@ def add_images(current_user, id_prod):
     db.session.commit()
     return jsonify({'message' : f'Imagine adaugata cu succes pentru produsul {produs.nume}'})
     
+#Returneaza un array de imagini pentru fiecare produs
+@app.route('/products/images/<id_prod>', methods=['GET'])
+def show_images(id_prod):
+    produs = Produse.query.get(id_prod)
+    if not produs:
+        return jsonify({'message' : 'Produsul nu exista!'})
+    
+    imagini = Imagini.query.filter_by(id_produs = id_prod).all()
+
+    output = []
+    for imagine in imagini:
+        imagine_data = {}
+        imagine_data['nume'] = imagine.nume
+        output.append(imagine_data)
+
+    return jsonify({'imagini' : output})
 
 #-->ENDPOINTS DETALII COS, PRODUSELE ADUAGATE IN COS SI GESTIONAREA ACESTORA
 
