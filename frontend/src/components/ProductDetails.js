@@ -4,12 +4,15 @@ import { useState, useEffect } from 'react';
 import API from '../services/API';
 import ProductUpdate from './ProductUpdate';
 import ProductOptions from './ProductOptions';
+import StockUpdate from './StockUpdate';
 
 function ProductDetails() {
     const {id} = useParams();
     const [product, setProduct] = useState(null);
     const [editedProduct, setEditedProduct] = useState();
+    const [updatedStock, setUpdatedStock] = useState();
     const [user, setUser] = useState(null);
+    const [productImages, setProductImages] = useState([]);
     
     useEffect( () => {
         API.getProductById(id)
@@ -18,6 +21,17 @@ function ProductDetails() {
             setProduct(data.produs);
         })
     }, [id]);
+
+    useEffect(() => {
+      API.getProductImages(id)
+        .then((data) => {
+          setProductImages(data.imagini);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, [id]);
+  
 
     useEffect(() => {
       const token = localStorage.getItem('token');
@@ -39,16 +53,12 @@ function ProductDetails() {
         }
     }, [])
 
-    // const addToCart = () => {
-    //   API.addToCart(id).then(data => console.log(data))
-    //   .catch(error => {
-    //     if (error.response && error.response.status === 401){
-    //       navigate("/login", {state: { message: "Trebuie sa fii autentificat/a pentru a adauga in cos articole!"}})
-    //   }});
-    // }
-
     const editProduct = (product) => {
       setEditedProduct(product);
+    }
+
+    const updateStock = (product) => {
+      setUpdatedStock(product);
     }
 
     const deleteProduct = () =>{
@@ -64,15 +74,29 @@ function ProductDetails() {
           <h1>{product.nume}</h1>
           <p>{product.descriere}</p>
           <p>Pret: {product.pret}</p>
+          {productImages.length > 0 && (
+            <div>
+              <h2>Imagini:</h2>
+              <ul>
+                {productImages.map((image, index) => (
+                  <li key={index}>
+                    <div className='w-25'>
+                    <img src={`/${image.nume}`} alt={image.nume} className="img-thumbnail img-responsive" />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {<ProductOptions id={id}/>}
-          {/* {product.stoc ? (<button className="btn btn-success" onClick={addToCart}>Adaugă în coș</button>)
-          : (<div className="alert alert-danger w-25" role="alert">Produs indisponibil</div>)} */}
 
           {user && user.admin ? (
             <>
-              <button className="btn btn-primary" onClick={ () => editProduct(product)}>Actualizează</button>
+              <button className="btn btn-primary" onClick={ () => editProduct(product)}>Editează</button>
               {editedProduct ? <ProductUpdate product = {editedProduct}/> : null}
               <button className="btn btn-danger" onClick={() => deleteProduct()}>Șterge</button>
+              <button className="btn btn-warning" onClick={() => updateStock(product)}>Stoc nou</button>
+              {updatedStock ? <StockUpdate product = {updatedStock}/> : null}
             </>
             )
             : null

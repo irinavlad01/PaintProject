@@ -18,7 +18,7 @@ function ProductList() {
             setProducts(data.produse)
 
             const uniqueCategories = [...new Set(data.produse.map(product => product.categorie))];
-            setCategories(uniqueCategories)
+            setCategories(uniqueCategories);
         })
     }, []);
 
@@ -45,6 +45,28 @@ function ProductList() {
       setSortAsc(!sortAsc);
     };
 
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+          if (token) {
+              const tokenPayload = token.split('.')[1];
+              const decodedToken = atob(tokenPayload);
+              const userId = JSON.parse(decodedToken).id;
+  
+              API.getUserById(userId)
+              .then(data => {setUser(data.user); console.log(data.user)})
+              .catch(error => {
+                  if(error.response && error.response.status === 404){
+                      console.log("Utilizatorul nu exista!");
+                  }
+              })
+          }
+          else{
+              console.log("Nu sunteti autentificat/ă!");
+          }
+      }, [])
+
 
   return (
     <div> 
@@ -62,7 +84,8 @@ function ProductList() {
       ))}
     </select>
       {filteredProducts.map(product => (
-        <div key={product.id}><Link to={`/produse/${product.id}`}>{product.nume}</Link></div>
+        <div key={product.id}><Link to={`/produse/${product.id}`}>{product.nume}</Link>
+        </div>
       ))}
       
     </div>

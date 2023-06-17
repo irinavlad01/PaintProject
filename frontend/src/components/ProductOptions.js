@@ -22,6 +22,11 @@ function ProductOptions(props) {
     });
     const [availableSizes, setAvailableSizes] = useState([]);
     const uniqueColors = [...new Set(stocks.map((stock) => stock.culoare))];
+    const selectedStock = stocks.find(
+        (stock) =>
+          stock.culoare === productOptions.culoare &&
+          stock.marime === productOptions.marime
+      );
 
     const handleColorChange = (e) =>{
         const color = e.target.value;
@@ -104,6 +109,7 @@ function ProductOptions(props) {
                 </option>
             ))}
         </select>
+        {selectedStock ? <p>Stoc disponibil: {selectedStock.stoc}</p> : 0}
         <textarea maxLength={200} onBlur={handleDescriptionChange}></textarea>
         <button type="submit">Adaugă în coș</button>
       </form>

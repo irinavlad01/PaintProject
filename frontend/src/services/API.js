@@ -183,6 +183,27 @@ const API = {
         })
         .then(response => response.data)
         .catch(error => console.log(error))
+    }, 
+
+    getProductImages(id){
+        return axios.get(`${BASE_URL}/products/images/${id}`, {
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error))
+    }, 
+
+    updateStock(id, stockData){
+        return axios.put(`${BASE_URL}/products/stock/${id}`, stockData, {
+            headers:{
+                'Content-Type' : 'application/json', 
+                'x-access-token' : `${token}`
+            }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error))
     }
 }
 
