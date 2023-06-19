@@ -22,7 +22,7 @@ function NewProduct() {
     API.addProduct(productData)
     .then(resp => {
       console.log(resp);
-      navigate('/produse', { state: { message: 'Produs adăugat cu succes!' } });
+      navigate('/', { state: { message: 'Produs adăugat cu succes!' } });
     })
   }
 

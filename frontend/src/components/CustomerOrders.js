@@ -48,7 +48,6 @@ function CustomerOrders() {
      });
     }
 
-
   return (
     <div>
     {orders.map(orderGroup => (
@@ -69,7 +68,7 @@ function CustomerOrders() {
             <ul>
               {order.produse_comanda.map((produs, index) => (
                 <li key={`${produs.id_produs}-${index}`}>
-                  Nume produs: {produs.nume_produs}, Preț: {produs.pret_produs}
+                  Nume produs: {produs.nume_produs}, Preț: {produs.pret_produs}, Descriere model: {produs.descriere_comanda}
                 </li>
               ))}
             </ul>

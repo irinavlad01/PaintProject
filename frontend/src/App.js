@@ -4,7 +4,6 @@ import ProductList from './components/ProductList';
 import ProductDetails from './components/ProductDetails';
 import Login from './components/Login';
 import Cart from './components/Cart';
-// import { useNavigate } from 'react-router-dom';
 import {Link, Route, Routes} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Account from './components/Account';
@@ -18,7 +17,6 @@ import NewProduct from './components/NewProduct';
 function App() {
   const [isAuth, setIsAuth] = useState(false)
   const [admin, setAdmin] = useState(false);
-  // const navigate = useNavigate();
 
   useEffect( () => {
     const token = localStorage.getItem('token');
@@ -33,17 +31,16 @@ function App() {
           .then(data => {setAdmin(data.user.admin); console.log(data.user.admin)})
           .catch(error => {
               if(error.response && error.response.status === 404){
-                  console.log("Utilizatorul nu exista!");
-              }
+                  console.log("Utilizatorul nu exista!");}
           })
       }
       else{
           console.log("Nu sunteti autentificat/ă!");
+          setIsAuth(false);
       }
       
       console.log(token) //pentru testare doar
     }, []);
-
 
   return (
     <div>
@@ -54,7 +51,7 @@ function App() {
             <Link to="/" className="nav-link">Acasă</Link>
           </li> */}
           <li className="nav-item">
-            <Link to="/produse" className="nav-link">Produse</Link>
+            <Link to="/" className="nav-link">Produse</Link>
           </li>
           {
             isAuth ? (
@@ -81,8 +78,7 @@ function App() {
       </nav>
       <div className="App">
         <Routes>
-          {/* <Route path="/" element={<Home/>}></Route> */}
-          <Route path="/produse" element={<ProductList/>}></Route>
+          <Route path="/" element={<ProductList/>}></Route>
           <Route path ="/produse/:id" element={<ProductDetails/>}></Route>
           <Route path="/login" element={<Login/>}></Route>
           <Route path="/cos" element={<Cart/>}></Route>

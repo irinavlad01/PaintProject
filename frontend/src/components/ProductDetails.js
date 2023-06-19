@@ -15,6 +15,9 @@ function ProductDetails() {
     const [addedStock, setAddedStock] = useState(null);
     const [user, setUser] = useState(null);
     const [productImages, setProductImages] = useState([]);
+
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [totalImages, setTotalImages] = useState(0);
     
     useEffect( () => {
         API.getProductById(id)
@@ -28,11 +31,24 @@ function ProductDetails() {
       API.getProductImages(id)
         .then((data) => {
           setProductImages(data.imagini);
+          setTotalImages(data.imagini.length);
         })
         .catch((error) => {
           console.log(error);
         });
     }, [id]);
+
+    const handleNextImage = () => {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === totalImages - 1 ? 0 : prevIndex + 1
+      );
+    };
+    
+    const handlePreviousImage = () => {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === 0 ? totalImages - 1 : prevIndex - 1
+      );
+    };
   
 
     useEffect(() => {
@@ -81,18 +97,33 @@ function ProductDetails() {
           <p>{product.descriere}</p>
           <p>Pret: {product.pret}</p>
           {productImages.length > 0 && (
+            // <div>
+            //   <ul>
+            //     {productImages.map((image, index) => (
+            //       <li key={index}>
+            //         <div className='w-25'>
+            //         <img src={`/${image.nume}`} alt={image.nume} className="img-thumbnail img-responsive" />
+            //         </div>
+            //       </li>
+            //     ))}
+            //   </ul>
+            // </div>
             <div>
-              <ul>
-                {productImages.map((image, index) => (
-                  <li key={index}>
-                    <div className='w-25'>
-                    <img src={`/${image.nume}`} alt={image.nume} className="img-thumbnail img-responsive" />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ul>
+              <li>
+                <div className="w-25 mx-auto">
+                  <img
+                    src={`/${productImages[currentImageIndex].nume}`}
+                    alt={productImages[currentImageIndex].nume}
+                    className="img-thumbnail img-responsive"
+                  />
+                </div>
+              </li>
+            </ul>
+          </div>
           )}
+          <button className="btn btn-primary" onClick={handlePreviousImage}>Înapoi</button>
+          <button className="btn btn-primary" onClick={handleNextImage}>Înainte</button>
           {<ProductOptions id={id}/>}
 
           {user && user.admin ? (
