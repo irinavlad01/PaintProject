@@ -79,6 +79,9 @@ def one_user(id_utilizator):
 @app.route('/users/add', methods = ['POST'])
 def create_user():
     data = request.get_json()
+    utilizator_existent = Utilizatori.query.filter_by(email = data['email']).first()
+    if utilizator_existent:
+        return make_response('Există deja un utilizator cu acest email! Introduceti va rog un email nou!', 409)
 
     hashed_pwd = generate_password_hash(data['parola'], method="sha256")
 
@@ -128,19 +131,19 @@ def login():
     auth = request.authorization
 
     if not auth or not auth.username or not auth.password:
-        return make_response('Credentiale invalide, va rugam ssa furnizati un email si o parola! Incercati din nou', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+        return make_response('Credentiale invalide, va rugam ssa furnizati un email si o parola! Incercati din nou', 401) #, {'WWW-Authenticate' : 'Basic realm="Login required!"'}
         #cand nu primim date de autentificare
     user = Utilizatori.query.filter_by(email = auth.username).first()
 
     if not user:
-        return make_response('Email incorect sau utilizatorul nu exista! Incercati din nou!', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+        return make_response('Email incorect sau utilizatorul nu exista! Incercati din nou!', 401) # , {'WWW-Authenticate' : 'Basic realm="Login required!"'}
         #cand nu exista un anumit user
     if check_password_hash(user.parola, auth.password):
         token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 60)}, app.config['SECRET_KEY'], algorithm='HS256')
 
         return jsonify({'token' : token})
     else: 
-        return make_response('Parola incorecta! Incercati din nou!', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+        return make_response('Parola incorecta! Incercati din nou!', 401) #, {'WWW-Authenticate' : 'Basic realm="Login required!"'}
    #cand parola este incorecta 
 
 

@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import ProductList from './components/ProductList';
 import ProductDetails from './components/ProductDetails';
@@ -43,27 +44,42 @@ function App() {
 
 
   return (
-    <>
-      <nav>
-        <ul>
-          <li><Link to="/">Acasă</Link></li>
-          <li><Link to="/produse">Produse</Link></li>
+    <div>
+
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <ul className="navbar-nav">
+          {/* <li className="nav-item">
+            <Link to="/" className="nav-link">Acasă</Link>
+          </li> */}
+          <li className="nav-item">
+            <Link to="/produse" className="nav-link">Produse</Link>
+          </li>
           {
-            isAuth ? (<li><Link to="/cont">Bine ai revenit!</Link></li>)
-            :
-            (
-              <li><Link to="/cont">Intra in cont</Link></li>
+            isAuth ? (
+              <li className="nav-item">
+                <Link to="/cont" className="nav-link">Bine ai revenit!</Link>
+              </li>
+            ) : (
+              <li className="nav-item">
+                <Link to="/cont" className="nav-link">Intra în cont</Link>
+              </li>
             )
           }
-          <li><Link to="/cos">Coșul tău</Link></li>
+          <li className="nav-item">
+            <Link to="/cos" className="nav-link">Coșul tău</Link>
+          </li>
           {
-            admin && (<li><Link to="/gestiune">Gestiune comenzi</Link></li>)
+            admin && (
+              <li className="nav-item">
+                <Link to="/gestiune" className="nav-link">Gestiune comenzi</Link>
+              </li>
+            )
           }
         </ul>
       </nav>
-      <div>
+      <div className="App">
         <Routes>
-          <Route path="/" element={<Home/>}></Route>
+          {/* <Route path="/" element={<Home/>}></Route> */}
           <Route path="/produse" element={<ProductList/>}></Route>
           <Route path ="/produse/:id" element={<ProductDetails/>}></Route>
           <Route path="/login" element={<Login/>}></Route>
@@ -75,7 +91,7 @@ function App() {
           <Route path="/gestiune" element={<CustomerOrders/>}></Route>
         </Routes>
       </div>
-    </>
+    </div>
   );
 }
 

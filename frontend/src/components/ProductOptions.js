@@ -93,7 +93,7 @@ function ProductOptions(props) {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <select name="culoare" onChange={handleColorChange}>
+        <select name="culoare" onChange={handleColorChange} className="form-control">
             <option value="">Culori disponibile</option>
             {uniqueColors.map( color => (
                 <option key={color} value={color}>
@@ -101,7 +101,7 @@ function ProductOptions(props) {
                 </option>
             ))}
         </select>
-        <select name="marime" onChange={handleSizeChange}>
+        <select name="marime" onChange={handleSizeChange} className="form-control">
             <option value="">Marimi disponibile</option>
             {availableSizes.map( size => (
                 <option key={size} value={size}>
@@ -110,8 +110,8 @@ function ProductOptions(props) {
             ))}
         </select>
         {selectedStock ? <p>Stoc disponibil: {selectedStock.stoc}</p> : 0}
-        <textarea maxLength={200} onBlur={handleDescriptionChange}></textarea>
-        <button type="submit">Adaugă în coș</button>
+        <textarea maxLength={200} onBlur={handleDescriptionChange} className="form-control"></textarea>
+        <button type="submit" className="btn btn-success">Adaugă în coș</button>
       </form>
     </div>
   )

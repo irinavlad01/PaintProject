@@ -58,12 +58,12 @@ function Cart() {
         addedProducts.map((product, index) => {
         if(product.id !== deletedProduct){
           return (
-            <li key={`${product.id}-${index}`}>
-                <p>{product.nume}</p>
-                <p>{product.descriere_comanda}</p>
-                <p>{product.culoare}</p>
-                <p>{product.marime}</p>
-                <p>{product.pret}</p>
+            <li key={`${product.id}-${index}`} className="list-element">
+                <p>Produs: {product.nume}</p>
+                <p>Descriere model: {product.descriere_comanda}</p>
+                <p>Culoare: {product.culoare}</p>
+                <p>Mărime: {product.marime}</p>
+                <p>Preț: {product.pret}</p>
                 <button onClick={() => handleDelete(product.id_adaugare)} className='btn btn-danger'>Sterge artciol</button>
             </li>
         );
@@ -74,7 +74,7 @@ function Cart() {
     </ul>
     {/* {isAuth && addedProducts && addedProducts.length > 0 ? (<button className="btn btn-primary" onClick={handleOrder}>Comandă acum!</button>)
     : null} */}
-    {isAuth && addedProducts && addedProducts.length > 0 ? (<Link to="/comanda">Continua la finalizarea comenzii</Link>) 
+    {isAuth && addedProducts && addedProducts.length > 0 ? (<button className="btn btn-primary"><Link to="/comanda" className="custom-link">Continua la finalizarea comenzii</Link></button>) 
     : null }
     {/* {message &&<p className="alert alert-success w-25" role="alert">{message}</p>} */}
 

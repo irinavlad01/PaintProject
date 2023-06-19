@@ -1,5 +1,10 @@
 .App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
   text-align: center;
+  height: 100vh;
 }
 
 .App-logo {
@@ -15,6 +20,47 @@
 
 ul {
   list-style-type: none;
+}
+
+.btn{
+  margin: 10px;
+}
+
+.btn.btn-primary{
+  background-color: #8f3abd;
+  border-color: #8f3abd;
+  color: white;
+}
+
+.btn.btn-primary:hover{
+  background-color: #954bbd;
+  border-color: #954bbd;
+}
+
+.btn.btn-primary:active{
+  background-color: #954bbd;
+  border-color: #954bbd;
+}
+
+a{
+  text-decoration: none;
+  color: #353336;
+}
+
+a:hover{
+  text-decoration: none;
+  color: #282629;
+}
+
+.custom-link{
+  color: white;
+}
+
+.list-element{
+  background-color: #e1d3e8;
+  border-color: #954bbd;
+  border-radius: 5px;
+  margin: 10px;
 }
 
 .App-header {

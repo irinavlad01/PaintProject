@@ -76,7 +76,6 @@ function ProductDetails() {
           <p>Pret: {product.pret}</p>
           {productImages.length > 0 && (
             <div>
-              <h2>Imagini:</h2>
               <ul>
                 {productImages.map((image, index) => (
                   <li key={index}>

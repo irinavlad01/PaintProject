@@ -66,6 +66,7 @@ function Account() {
         <p>{message}</p>
         <button className="btn btn-primary" onClick={showLoginForm}>Autentificare</button>
         {loginForm && <Login/>}
+        <br/>
         <button className="btn btn-success" onClick={showRegisterForm}>Inregistrare</button>
         {registerForm && <Register/>}
       </div>) 
@@ -73,7 +74,8 @@ function Account() {
       <div>
         <h3>Bun venit, {user.nume} {user.prenume}!</h3>
         <button className="btn btn-danger" onClick={handleLogout}>Log out</button>
-        <h3 onClick={showOrders}>Istoric comenzi</h3>
+        <br/>
+        <button className="btn btn-primary" onClick={showOrders}>Istoric comenzi</button>
         {orderList && <Orders/>}
       </div>)}
     </>

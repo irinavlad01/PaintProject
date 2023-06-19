@@ -27,21 +27,23 @@ function Login() {
 
   return (
     <div>
-      {message && <p className="alert alert-danger w-25" role="alert">{message}</p>}
-      {authError && <p className="alert alert-danger w-25" role="alert">{authError}</p>}
+      {message && <p className="alert alert-success" role="alert">{message}</p>}
+      {authError && <p className="alert alert-danger" role="alert">{authError}</p>}
       <h1>Log in</h1>
       <form onSubmit={handleLogin}>
-        <label htmlFor="email">Email:</label>
+        <label htmlFor="email" className="form-label">Email:</label>
         <input id="email"
         type="text"
         value={email}
-        onChange={e => setEmail(e.target.value)}></input>
-        <label htmlFor="parola">Parola:</label>
+        onChange={e => setEmail(e.target.value)}
+        className="form-control"></input>
+        <label htmlFor="parola" className="form-label">Parola:</label>
         <input id="parola"
         type="text"
         value={parola}
-        onChange={e => setParola(e.target.value)}></input>
-        <button type="submit">Log in</button>
+        onChange={e => setParola(e.target.value)}
+        className="form-control"></input>
+        <button type="submit" className="btn btn-success">Log in</button>
       </form>
     </div>
   )

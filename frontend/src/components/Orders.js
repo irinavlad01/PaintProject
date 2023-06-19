@@ -19,12 +19,12 @@ function Orders() {
                     <h3>Comanda cu numarul {order.id_comanda}</h3>
                     <h4>Statusul comenzii: <span className="text text-success">{order.status}</span></h4>
                     <ul>
-                    {order.produse_comanda.map(product => {
+                    {order.produse_comanda.map((product, index) => {
                         return (
-                            <li key={product.id_produs}>
-                                <p>Nume produs: {product.nume_produs}</p>
-                                <p>Pret produs: {product.pret_produs}</p>
-                                <p>Detalii design comandat: {product.descriere_comanda}</p>
+                            <li key={`${product.id_produs}-${index}`}>
+                                <p>Produs: {product.nume_produs}</p>
+                                <p>Pret: {product.pret_produs}</p>
+                                <p>Descriere model: {product.descriere_comanda}</p>
                             </li>
                         )
                     })}
