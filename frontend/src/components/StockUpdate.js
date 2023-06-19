@@ -22,22 +22,25 @@ function StockUpdate(props) {
   return (
     <div>
         <form onSubmit={sendStock}>
-            <label htmlFor="marime">
+            <label htmlFor="culoare" className="form-label">
                 Culoare: 
             </label>
-            <input type="text" name="culoare" id="culoare" value={culoare} onChange={(e) => setCuloare(e.target.value) }/>
+            <input type="text" name="culoare" id="culoare" value={culoare} onChange={(e) => setCuloare(e.target.value) }
+            className="form-control"/>
 
-            <label htmlFor="culoare">
+            <label htmlFor="marime" className="form-label">
                 Marime: 
             </label>
-            <input type="text" name="marime" id="marime" value={marime} onChange={(e) => setMarime(e.target.value) }/>
+            <input type="text" name="marime" id="marime" value={marime} onChange={(e) => setMarime(e.target.value) }
+            className="form-control"/>
 
-            <label htmlFor="stoc">
+            <label htmlFor="stoc" className="form-label">
                 Stoc: 
             </label>
-            <input type="text" name="stoc" id="stoc" value={stoc} onChange={(e) => setStoc(e.target.value) }/>
+            <input type="text" name="stoc" id="stoc" value={stoc} onChange={(e) => setStoc(e.target.value) }
+            className="form-control"/>
 
-            <button type="submit">Trimite</button>
+            <button type="submit" className="btn btn-success">Trimite</button>
         </form>
       
     </div>

@@ -139,7 +139,7 @@ def login():
         return make_response('Email incorect sau utilizatorul nu exista! Incercati din nou!', 401) # , {'WWW-Authenticate' : 'Basic realm="Login required!"'}
         #cand nu exista un anumit user
     if check_password_hash(user.parola, auth.password):
-        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 60)}, app.config['SECRET_KEY'], algorithm='HS256')
+        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 1)}, app.config['SECRET_KEY'], algorithm='HS256')
 
         return jsonify({'token' : token})
     else: 
@@ -276,7 +276,7 @@ def create_products(current_user):
     db.session.add(product)
     db.session.commit()
 
-    return jsonify({'message' : f'Produs adaugat cu succes!'})
+    return jsonify({'message' : 'Produs adaugat cu succes!'}), 200
 
 
 @app.route('/products/<id_prod>', methods = ['OPTIONS', 'PUT'])

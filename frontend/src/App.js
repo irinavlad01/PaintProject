@@ -4,7 +4,7 @@ import ProductList from './components/ProductList';
 import ProductDetails from './components/ProductDetails';
 import Login from './components/Login';
 import Cart from './components/Cart';
-import Home from './components/Home';
+// import { useNavigate } from 'react-router-dom';
 import {Link, Route, Routes} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Account from './components/Account';
@@ -13,10 +13,12 @@ import Register from './components/Register';
 import OrderDetails from './components/OrderDetails';
 import CustomerOrders from './components/CustomerOrders';
 import API from './services/API';
+import NewProduct from './components/NewProduct';
 
 function App() {
   const [isAuth, setIsAuth] = useState(false)
   const [admin, setAdmin] = useState(false);
+  // const navigate = useNavigate();
 
   useEffect( () => {
     const token = localStorage.getItem('token');
@@ -89,6 +91,7 @@ function App() {
           <Route path="/inregistrare" element={<Register/>}></Route>
           <Route path="/comanda" element={<OrderDetails/>}></Route>
           <Route path="/gestiune" element={<CustomerOrders/>}></Route>
+          <Route path="/produse/adauga" element={<NewProduct/>}></Route>
         </Routes>
       </div>
     </div>

@@ -5,12 +5,14 @@ import API from '../services/API';
 import ProductUpdate from './ProductUpdate';
 import ProductOptions from './ProductOptions';
 import StockUpdate from './StockUpdate';
+import AddStock from './AddStock';
 
 function ProductDetails() {
     const {id} = useParams();
     const [product, setProduct] = useState(null);
-    const [editedProduct, setEditedProduct] = useState();
-    const [updatedStock, setUpdatedStock] = useState();
+    const [editedProduct, setEditedProduct] = useState(null);
+    const [updatedStock, setUpdatedStock] = useState(null);
+    const [addedStock, setAddedStock] = useState(null);
     const [user, setUser] = useState(null);
     const [productImages, setProductImages] = useState([]);
     
@@ -61,6 +63,10 @@ function ProductDetails() {
       setUpdatedStock(product);
     }
 
+    const addStock = (product) => {
+      setAddedStock(product)
+    }
+
     const deleteProduct = () =>{
       API.deleteProduct(product.id)
       .then(resp => console.log(resp));
@@ -94,8 +100,10 @@ function ProductDetails() {
               <button className="btn btn-primary" onClick={ () => editProduct(product)}>Editează</button>
               {editedProduct ? <ProductUpdate product = {editedProduct}/> : null}
               <button className="btn btn-danger" onClick={() => deleteProduct()}>Șterge</button>
-              <button className="btn btn-warning" onClick={() => updateStock(product)}>Stoc nou</button>
+              <button className="btn btn-warning" onClick={() => updateStock(product)}>Actualizeaza număr stoc</button>
               {updatedStock ? <StockUpdate product = {updatedStock}/> : null}
+              <button className="btn btn-warning" onClick={() => addStock(product)}>Adaugă opțiuni și stoc</button>
+              {addedStock ? <AddStock product = {addedStock}/> : null}
             </>
             )
             : null

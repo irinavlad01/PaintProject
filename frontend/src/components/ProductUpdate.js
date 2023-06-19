@@ -27,22 +27,22 @@ function ProductUpdate(props) {
       
         <form onSubmit={updateProduct} className="mb-3">
             <label htmlFor="nume" type="text" className="form-label">Denumire:</label>
-            <input type="text" className="form-control" value={nume} placeholder="Enter name"
+            <input type="text" className="form-control" value={nume} 
             onChange = {(e) => setNume(e.target.value)}/>
 
-            <label htmlFor="nume" type="text" className="form-label">Categorie:</label>
-            <input type="text" className="form-control" value={categorie} placeholder="Enter name"
+            <label htmlFor="categorie" type="text" className="form-label">Categorie:</label>
+            <input type="text" className="form-control" value={categorie}
             onChange = {(e) => setCategorie(e.target.value)}/>
 
-            <label htmlFor="nume" type="text" className="form-label">Pret:</label>
-            <input type="text" className="form-control" value={pret} placeholder="Enter name"
+            <label htmlFor="pret" type="text" className="form-label">Pret:</label>
+            <input type="text" className="form-control" value={pret}
             onChange = {(e) => setPret(e.target.value)}/>
 
-            <label htmlFor="nume" type="text" className="form-label">Descriere</label>
-            <input type="text" className="form-control" value={descriere } placeholder="Enter name"
+            <label htmlFor="descriere" type="text" className="form-label">Descriere</label>
+            <input type="text" className="form-control" value={descriere}
             onChange = {(e) => setDescriere(e.target.value)}/>
 
-            <button type="submit" className="btn btn-success mt-3">Update</button>
+            <button type="submit" className="btn btn-success mt-3">Actualizează</button>
         </form>
       ) : null}
     </div>
