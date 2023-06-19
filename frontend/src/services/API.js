@@ -142,6 +142,17 @@ const API = {
         .catch(error => console.log(error))
     }, 
 
+    addProduct(productData){
+        return axios.post(`${BASE_URL}/products/create`, productData, {
+            headers: {
+                'Conent-Type' : 'application/json',
+                'x-access-token' : `${token}`
+            }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error))
+    },
+
     productStocks(id){
         return axios.get(`${BASE_URL}/products/stock/${id}`, {
             headers: {
@@ -197,6 +208,17 @@ const API = {
 
     updateStock(id, stockData){
         return axios.put(`${BASE_URL}/products/stock/${id}`, stockData, {
+            headers:{
+                'Content-Type' : 'application/json', 
+                'x-access-token' : `${token}`
+            }
+        })
+        .then(response => response.data)
+        .catch(error => console.log(error))
+    }, 
+
+    addStock(id, stockData){
+        return axios.post(`${BASE_URL}/products/stock/${id}`, stockData, {
             headers:{
                 'Content-Type' : 'application/json', 
                 'x-access-token' : `${token}`
