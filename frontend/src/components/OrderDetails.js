@@ -34,7 +34,7 @@ function OrderDetails() {
 
     API.placeOrder({adresa_livrare : address})
       .then(data => {
-        navigate('/produse', {state: {message: data.message}});
+        navigate('/', {state: {message: data.message}});
       })
       .catch(error => {
         console.log(error);
@@ -74,6 +74,7 @@ function OrderDetails() {
               value="userAddress"
               checked={addressOption === 'userAddress'}
               onChange={handleAddressOptionChange}
+              className="form-check-input"
             />
             Adresa domiciliu
           </label>
@@ -85,23 +86,25 @@ function OrderDetails() {
               value="deliveryAddress"
               checked={addressOption === 'deliveryAddress'}
               onChange={handleAddressOptionChange}
+              className="form-check-input"
             />
             Adresa livrare
           </label>
         </div>
         {addressOption === 'deliveryAddress' && (
           <div>
-            <label htmlFor="deliveryAddress">Introduceți adresa de livrare:</label>
+            <label htmlFor="deliveryAddress" className="form-label">Introduceți adresa de livrare:</label>
             <input
               type="text"
               id="deliveryAddress"
               value={deliveryAddress}
               onChange={handleDeliveryAddressChange}
+              className="form-control"
             />
           </div>
         )}
         {user && addressOption === 'userAddress' && <p>{user.adresa_domiciliu}</p>}
-        <button type="submit">Trimite comandă</button>
+        <button type="submit" className="btn btn-success">Trimite comandă</button>
       </form>
       <p>Modalitatea de plata curenta este ramburs. Multumim de intelegere!</p>
     </div>

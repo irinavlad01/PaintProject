@@ -7,14 +7,17 @@ import API from '../services/API';
 function Cart() {
     const[isAuth, setIsAuth] = useState(false);
     const[addedProducts, setAddedProducts] = useState([]);
-    // const[message, setMessage] = useState(""); pentru mesajul ca comanda a fost plasata cu succes
 
-    //cand se adauga produs in cos, din product options
     const location = useLocation();
     const successMessage = location.state && location.state.message;
 
-    //pentru a nu reincarca pagina dupa actualizarea datelor
     const [deletedProduct, setDeletedProduct] = useState(null);
+
+
+    const calculateTotalPrice = () => {
+      const total = addedProducts.reduce((accumulator, product) => accumulator + product.pret, 0);
+      return total;
+    };
 
   useEffect( () => {
     const token = localStorage.getItem('token')
@@ -26,19 +29,10 @@ function Cart() {
           setIsAuth(false);
         }
       })
+
     }
   }, [deletedProduct]);
 
-  // const handleOrder = () => {
-  //   API.placeOrder().then(data => {
-  //       setMessage(data.message)
-  //   })
-  //   .catch(error => {
-  //     if(error.response && error.response.message === 401){
-  //       setIsAuth(false);
-  //     }}
-  //   )
-  // }
 
   const handleDelete = (id) =>{
       API.deleteFromCart(id)
@@ -52,6 +46,7 @@ function Cart() {
   return (
     <>
     {successMessage && <p className='alert alert-success w-25'>{successMessage}</p>}
+    <h1>Coșul de cumpărături</h1>
     <ul>
       {isAuth ? (
         addedProducts && addedProducts.length > 0 ? (
@@ -72,11 +67,13 @@ function Cart() {
           })) : (<p>Cosul este gol.</p>)) 
         : (<p>Trebuie să fiți autentificat pentru a vizualiza cosul.</p>)}
     </ul>
-    {/* {isAuth && addedProducts && addedProducts.length > 0 ? (<button className="btn btn-primary" onClick={handleOrder}>Comandă acum!</button>)
-    : null} */}
-    {isAuth && addedProducts && addedProducts.length > 0 ? (<button className="btn btn-primary"><Link to="/comanda" className="custom-link">Continua la finalizarea comenzii</Link></button>) 
+    {isAuth && addedProducts && addedProducts.length > 0 ? (
+      <div>
+        <p>Total: {calculateTotalPrice()}</p>
+         <button className="btn btn-primary"><Link to="/comanda" className="custom-link">Continua la finalizarea comenzii</Link></button>
+      </div>
+   ) 
     : null }
-    {/* {message &&<p className="alert alert-success w-25" role="alert">{message}</p>} */}
 
     </>
   )

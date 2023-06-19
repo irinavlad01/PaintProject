@@ -72,7 +72,7 @@ function Account() {
       </div>) 
       : ( user && 
       <div>
-        <h3>Bun venit, {user.nume} {user.prenume}!</h3>
+        <h3>Bun venit, {user.prenume} {user.nume}!</h3>
         <button className="btn btn-danger" onClick={handleLogout}>Log out</button>
         <br/>
         <button className="btn btn-primary" onClick={showOrders}>Istoric comenzi</button>
