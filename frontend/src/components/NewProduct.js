@@ -6,7 +6,9 @@ function NewProduct() {
   return (
     <div>
         <form>
-
+          <label>
+            
+          </label>
         </form>
     </div>
   )

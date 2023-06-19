@@ -34,7 +34,7 @@ function OrderDetails() {
 
     API.placeOrder({adresa_livrare : address})
       .then(data => {
-        navigate('/', {state: {message: data.message}});
+        navigate('/produse', {state: {message: data.message}});
       })
       .catch(error => {
         console.log(error);

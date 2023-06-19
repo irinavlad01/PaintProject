@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import API from '../services/API';
+import { useLocation } from 'react-router-dom';
 
 function ProductList() {
     const [products, setProducts] = useState([]);
@@ -11,6 +12,9 @@ function ProductList() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [filteredProducts, setFilteredProducts] = useState(products);
     const [sortAsc, setSortAsc] = useState(true);
+
+    const location = useLocation();
+    const successMessage = location.state && location.state.message;
 
     useEffect( () => {
         API.getAllProducts().then(data => {
@@ -70,12 +74,13 @@ function ProductList() {
 
   return (
     <div> 
-      <h1>Lista produse</h1>
+      <h1>Welcome to PaintProject</h1>
+      {successMessage && (<p className='alert alert-success w-25' role='alert'>{successMessage}</p>)}
       {/* <button><Link to={`/products/create`}>Add product</Link></button> */}
-      <button onClick={handleSort}>
+      <button onClick={handleSort} className="btn btn-primary">
         {sortAsc ? 'Primele adaugari': 'Cele mai recente' }
       </button>
-      <select value={selectedCategory} onChange={handleCategoryChange} className="form-control w-25">
+      <select value={selectedCategory} onChange={handleCategoryChange} className="form-control">
       <option value="">Toate categoriile</option>
       {categories.map((category, index) => (
         <option key={index} value={category}>

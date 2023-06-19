@@ -31,7 +31,7 @@ const API = {
             }
         })
         .then(response => response.data)
-        .catch(error => console.log(error))
+        // .catch(error => console.log(error))
     },
 
     login(username, password){
