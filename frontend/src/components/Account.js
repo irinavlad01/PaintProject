@@ -67,7 +67,7 @@ function Account() {
         <button className="btn btn-primary" onClick={showLoginForm}>Autentificare</button>
         {loginForm && <Login/>}
         <br/>
-        <button className="btn btn-success" onClick={showRegisterForm}>Inregistrare</button>
+        <button className="btn btn-success" onClick={showRegisterForm}>Înregistrare</button>
         {registerForm && <Register/>}
       </div>) 
       : ( user && 

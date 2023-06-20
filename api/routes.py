@@ -131,20 +131,17 @@ def login():
     auth = request.authorization
 
     if not auth or not auth.username or not auth.password:
-        return make_response('Credentiale invalide, va rugam ssa furnizati un email si o parola! Incercati din nou', 401) #, {'WWW-Authenticate' : 'Basic realm="Login required!"'}
-        #cand nu primim date de autentificare
+        return make_response('Credentiale invalide, va rugam sa furnizati un email si o parola! Incercati din nou', 401)
     user = Utilizatori.query.filter_by(email = auth.username).first()
 
     if not user:
-        return make_response('Email incorect sau utilizatorul nu exista! Incercati din nou!', 401) # , {'WWW-Authenticate' : 'Basic realm="Login required!"'}
-        #cand nu exista un anumit user
+        return make_response('Email incorect sau utilizatorul nu exista! Incercati din nou!', 401)
     if check_password_hash(user.parola, auth.password):
         token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 120)}, app.config['SECRET_KEY'], algorithm='HS256')
 
         return jsonify({'token' : token})
     else: 
-        return make_response('Parola incorecta! Incercati din nou!', 401) #, {'WWW-Authenticate' : 'Basic realm="Login required!"'}
-   #cand parola este incorecta 
+        return make_response('Parola incorecta! Incercati din nou!', 401)
 
 
 #Endpoints cos de cumparaturi (pentru admin)
@@ -536,7 +533,9 @@ def show_orders(current_user):
                 'id_produs': produs.id,
                 'nume_produs': produs.nume,
                 'pret_produs': produs.pret,
-                'descriere_comanda' : detaliu_cos.descriere
+                'descriere_comanda' : detaliu_cos.descriere, 
+                'marime_produs' : detaliu_cos.marime,
+                'culoare_produs' : detaliu_cos.culoare
             }
             produse_comanda.append(produs_data)
 
