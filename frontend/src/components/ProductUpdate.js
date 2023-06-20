@@ -18,7 +18,7 @@ function ProductUpdate(props) {
         }
 
         API.updateProduct(props.product.id, productData)
-        .then(resp => console.log(resp));
+        .then(resp => {console.log(resp); window.location.reload();});
     }
 
   return (

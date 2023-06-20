@@ -527,6 +527,7 @@ def show_orders(current_user):
         comanda_data['id_comanda'] = comanda.id
         comanda_data['id_cos'] = comanda.cos.id
         comanda_data['status'] = comanda.status
+        comanda_data['total'] = comanda.total
 
         produse_comanda = []
         for detaliu_cos in comanda.cos.detalii_cos:
@@ -536,7 +537,6 @@ def show_orders(current_user):
                 'nume_produs': produs.nume,
                 'pret_produs': produs.pret,
                 'descriere_comanda' : detaliu_cos.descriere
-                # 'imagine_produs' : produs.imagine
             }
             produse_comanda.append(produs_data)
 
@@ -561,6 +561,7 @@ def show_user_orders(current_user, id_utilizator):
         comanda_data['id_comanda'] = comanda.id
         comanda_data['id_cos'] = comanda.cos.id
         comanda_data['status'] = comanda.status
+        comanda_data['adresa_livrare'] = comanda.adresa_livrare
 
         produse_comanda = []
         for detaliu_cos in comanda.cos.detalii_cos:
@@ -569,8 +570,9 @@ def show_user_orders(current_user, id_utilizator):
                 'id_produs': produs.id,
                 'nume_produs': produs.nume,
                 'pret_produs': produs.pret,
-                'descriere_comanda' : detaliu_cos.descriere
-                # 'imagine_produs' : produs.imagine
+                'descriere_comanda' : detaliu_cos.descriere,
+                'marime_produs' : detaliu_cos.marime,
+                'culoare_produs' : detaliu_cos.culoare
             }
             produse_comanda.append(produs_data)
 

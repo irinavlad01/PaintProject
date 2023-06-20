@@ -15,12 +15,13 @@ function StockUpdate(props) {
             stoc: stoc
         }
         API.updateStock(props.product.id, stockData)
-        .then(resp => console.log(resp));
+        .then(resp => {console.log(resp); window.location.reload();});
     }
 
 
   return (
     <div>
+        <p>Introdu mărimea și culoarea cărora dorești să le actualizezi stocul.</p>
         <form onSubmit={sendStock}>
             <label htmlFor="culoare" className="form-label">
                 Culoare: 
