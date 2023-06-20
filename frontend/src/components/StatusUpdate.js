@@ -20,8 +20,8 @@ function StatusUpdate(props) {
     <div>
       <form onSubmit={updateStatus}>
         <label>Status nou pentru comanda {props.orderId}: </label>
-        <input type="text" value={status} onChange={(e) => setStatus(e.target.value )}/>
-        <button type="submit">Trimite</button>
+        <input type="text" value={status} onChange={(e) => setStatus(e.target.value )} className="form-control"/>
+        <button className="btn btn-success" type="submit">Trimite</button>
       </form>
     </div>
   )

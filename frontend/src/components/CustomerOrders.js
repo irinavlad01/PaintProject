@@ -28,7 +28,6 @@ function CustomerOrders() {
             .catch(error => console.log(error));
         })
         .catch(error => console.log(error));
-        // API.showOrdersForUser().then(data => setOrders(data.comenzi));
     }, []);
 
     const editOrder = (orderId) =>{
@@ -41,11 +40,14 @@ function CustomerOrders() {
     }
 
     const deleteOrder = (orderId) => {
-      API.deleteOrder(orderId)
-      .then(resp => {
+      const confirmDelete = window.confirm("Sunteți sigur/ă că doriți să anulați această comandă?")
+      if(confirmDelete){
+        API.deleteOrder(orderId)
+        .then(resp => {
         console.log(resp);
         window.location.href = '/gestiune';
      });
+      }
     }
 
   return (

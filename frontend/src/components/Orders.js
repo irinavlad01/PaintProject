@@ -24,6 +24,8 @@ function Orders() {
                             <li key={`${product.id_produs}-${index}`}>
                                 <p>Produs: {product.nume_produs}</p>
                                 <p>Pret: {product.pret_produs}</p>
+                                <p>Marime: {product.marime_produs}</p>
+                                <p>Culoare: {product.culoare_produs}</p>
                                 <p>Descriere model: {product.descriere_comanda}</p>
                             </li>
                         )
