@@ -15,10 +15,10 @@ function Orders() {
             <ul>
             {orders.map(order => {
                 return(
-                <div key={order.id_comanda}>
+                <div key={order.id_comanda} className="order-element">
                     <h3>Comanda cu numarul {order.id_comanda}</h3>
                     <h4>Statusul comenzii: <span className="text text-success">{order.status}</span></h4>
-                    <ul>
+                    <ul className="order-element-child">
                     {order.produse_comanda.map((product, index) => {
                         return (
                             <li key={`${product.id_produs}-${index}`}>
@@ -29,7 +29,7 @@ function Orders() {
                         )
                     })}
                     </ul>
-    
+                    <p>Total comandă: {order.total}</p>
                     
                 </div>
                 )

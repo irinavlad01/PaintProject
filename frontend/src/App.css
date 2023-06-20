@@ -78,6 +78,30 @@ a:hover{
   color: #61dafb;
 }
 
+.product-list{
+  font-size: 2rem;
+}
+
+.order-element{
+  background-color:  #e1d3e8;
+  border-radius: 5px;
+  margin: 20px;
+  padding: 20px;
+}
+
+.order-element-child{
+  background-color: #ebe4f0;
+  margin: 20px;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.user-order{
+  background-color: #f5f2f7;
+  border-radius: 5px;
+  margin: 20px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

@@ -84,8 +84,11 @@ function ProductDetails() {
     }
 
     const deleteProduct = () =>{
-      API.deleteProduct(product.id)
+      const confirmDelete = window.confirm("Sunteți sigur/ă că doriți să ștergeți acest produs?")
+      if(confirmDelete){
+        API.deleteProduct(product.id)
       .then(resp => console.log(resp));
+      }
     }
 
   return (
@@ -97,17 +100,6 @@ function ProductDetails() {
           <p>{product.descriere}</p>
           <p>Pret: {product.pret}</p>
           {productImages.length > 0 && (
-            // <div>
-            //   <ul>
-            //     {productImages.map((image, index) => (
-            //       <li key={index}>
-            //         <div className='w-25'>
-            //         <img src={`/${image.nume}`} alt={image.nume} className="img-thumbnail img-responsive" />
-            //         </div>
-            //       </li>
-            //     ))}
-            //   </ul>
-            // </div>
             <div>
             <ul>
               <li>
@@ -124,6 +116,8 @@ function ProductDetails() {
           )}
           <button className="btn btn-primary" onClick={handlePreviousImage}>Înapoi</button>
           <button className="btn btn-primary" onClick={handleNextImage}>Înainte</button>
+          <p>Reguli de întreținere: Spălați produsul doar la 40 de grade Celsius! 
+            Nu folosiți înălbitori sau alte substanțe de curățare industriale! Happy wear!</p>
           {<ProductOptions id={id}/>}
 
           {user && user.admin ? (

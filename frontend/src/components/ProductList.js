@@ -90,7 +90,7 @@ function ProductList() {
       ))}
     </select>
       {filteredProducts.map(product => (
-        <div key={product.id}><Link to={`/produse/${product.id}`}>{product.nume}</Link>
+        <div className="product-list" key={product.id}><Link to={`/produse/${product.id}`}>{product.nume}</Link>
         </div>
       ))}
       

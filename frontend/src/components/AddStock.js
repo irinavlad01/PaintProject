@@ -16,12 +16,13 @@ function AddStock(props) {
             stoc: stoc
         }
         API.addStock(props.product.id, stockData)
-        .then(resp => console.log(resp));
+        .then(resp => {console.log(resp); window.location.reload();});
     }
 
 
   return (
     <div>
+      <p>Adaugă culori și mărimi noi pentru acest produs.</p>
       <form onSubmit={addNewStock}>
             <label htmlFor="culoare" className="form-label">
                 Culoare: 
