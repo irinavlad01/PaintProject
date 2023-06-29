@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import API from '../services/API';
-
+import { useNavigate } from 'react-router-dom';
 
 function Orders() {
     const [orders, setOrders] = useState([]);
-    
+    const navigate = useNavigate();
+
     useEffect( () => {
-        API.showAllOrders().then(data => setOrders(data.comenzi));
-    }, []);
+        API.showAllOrders()
+        .then(data => setOrders(data.comenzi))
+        .catch(error => {
+            if(error.response && error.response.status === 401){
+                navigate("/login", { state: { message: "Trebuie să fii autentificat/ă pentru a accesa comenzile!" } });
+            }
+        })
+    }, [navigate])
+
 
   return (
     <div>

@@ -7,10 +7,8 @@ import { useNavigate } from 'react-router-dom';
 function OrderDetails() {
  
   const [user, setUser] = useState();
-  // const [message, setMessage] = useState("");
   const [addressOption, setAddressOption] = useState('userAddress');
   const [deliveryAddress, setDeliveryAddress] = useState('');
-  // const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   const handleAddressOptionChange = (e) => {

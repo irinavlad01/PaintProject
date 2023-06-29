@@ -59,7 +59,7 @@ function ProductDetails() {
             const userId = JSON.parse(decodedToken).id;
 
             API.getUserById(userId)
-            .then(data => {setUser(data.user); console.log(data.user)})
+            .then(data => {setUser(data.user);})
             .catch(error => {
                 if(error.response && error.response.status === 404){
                     console.log("Utilizatorul nu exista!");

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import API from '../services/API';
 
 
@@ -13,12 +13,14 @@ function Register() {
     const [telefon, setTelefon] = useState("");
     const navigate = useNavigate();
 
-    const [registerError, setRegisterError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [validEmail, setValidEmail] = useState(true);
     const [telefonError, setTelefonError] = useState("");
     const [validTelefon, setValidTelefon] = useState(true);
     const [validForm, setValidForm] = useState(true);
+
+    const location = useLocation();
+    const registerErrorMessage = location.state && location.state.message;
 
     const emailHandler = (e) => {
         const emailValue = e.target.value;
@@ -90,7 +92,7 @@ function Register() {
         })
         .catch(error => {
           if(error.response && error.response.status === 409){
-            setRegisterError(error.response.data);
+            navigate('/cont', {state: {message: 'Exista deja un utilizator cu acest email!'}})
           }
         })
         }else{
@@ -99,7 +101,7 @@ function Register() {
     }
   return (
     <div>
-      {registerError && <p className="alert alert-danger w-25" role="alert">{registerError}</p>}
+      {registerErrorMessage && <p className="alert alert-danger w-25" role="alert">{registerErrorMessage}</p>}
       <form onSubmit={registerHadler} className="mb-3">
         <label htmlFor="nume" type="text" className="form-label">Nume:</label>
         <input type="text" className="form-control" value={nume}
