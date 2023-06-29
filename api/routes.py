@@ -137,7 +137,7 @@ def login():
     if not user:
         return make_response('Email incorect sau utilizatorul nu exista! Incercati din nou!', 401)
     if check_password_hash(user.parola, auth.password):
-        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 1)}, app.config['SECRET_KEY'], algorithm='HS256')
+        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 120)}, app.config['SECRET_KEY'], algorithm='HS256')
 
         return jsonify({'token' : token})
     else: 
