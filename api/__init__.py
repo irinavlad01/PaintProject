@@ -5,9 +5,9 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, resources={
     r"/*": {
-        "origins": "http://localhost:3000", #permite doar serverului de react sa trimita cereri
+        "origins": "http://localhost:3000", 
         "supports_credentials": True,
-        "methods": ["GET", "POST", "PUT", "OPTIONS", "DELETE", "HEAD", "CONNECT", "PATCH", "TRACE"] #permite toate tipurile de cereri
+        "methods": ["GET", "POST", "PUT", "OPTIONS", "DELETE", "HEAD", "CONNECT", "PATCH", "TRACE"] 
     }
 })
 

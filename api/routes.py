@@ -10,7 +10,6 @@ import jwt
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        #args = positional argument; kwargs = keyword arguments 
         token = None 
 
         if 'x-access-token' in request.headers:
@@ -29,8 +28,6 @@ def token_required(f):
     
     return decorated
 
-
-#Endpoints utilizatori
 @app.route('/users', methods = ['GET'])
 @token_required
 def get_all_users(current_user):
@@ -43,7 +40,7 @@ def get_all_users(current_user):
     output = []
 
     for user in users:
-        user_data = {} #creaza un dictionar python. Cheie si valori
+        user_data = {} 
         user_data['id'] = user.id
         user_data['nume'] = user.nume
         user_data['prenume'] = user.prenume
@@ -55,7 +52,6 @@ def get_all_users(current_user):
 
     return jsonify({'users' : output})
 
-#Endpoint neprotejat de token, pentru a afisa utilizatorul autentificat in pagina
 @app.route('/users/<id_utilizator>', methods = ['GET'])
 def one_user(id_utilizator):
     
@@ -75,7 +71,6 @@ def one_user(id_utilizator):
 
     return jsonify({'user' : user_data})
 
-
 @app.route('/users/add', methods = ['POST'])
 def create_user():
     data = request.get_json()
@@ -92,7 +87,6 @@ def create_user():
 
     return jsonify({'mesaj' : 'Utilizator adaugat cu succes!'})
 
-
 @app.route('/users/<id_utilizator>', methods = ['PUT'])
 @token_required
 def promote_user(current_user, id_utilizator):
@@ -107,7 +101,6 @@ def promote_user(current_user, id_utilizator):
     db.session.commit()
 
     return jsonify({'message' : 'The user has been promoted!'})
-
 
 @app.route('/users/<id_utilizator>', methods = ['DELETE'])
 @token_required
@@ -143,10 +136,6 @@ def login():
     else: 
         return make_response('Parola incorecta! Incercati din nou!', 401)
 
-
-#Endpoints cos de cumparaturi (pentru admin)
-
-#Creaza un cos pentru utilizator
 @app.route('/cart', methods=['POST'])
 @token_required
 def create_cart(current_user):
@@ -161,7 +150,6 @@ def create_cart(current_user):
 
     return jsonify({'message' : 'Cart created'})
 
-#Returneaza datele unui cos al utilizatorului curent
 @app.route('/cart', methods=['GET'])
 @token_required
 def all_carts(current_user):
@@ -171,7 +159,7 @@ def all_carts(current_user):
     output = []
     
     for cart in carts: 
-        cart_data = {} #creaza un dictionar python. Cheie si valori
+        cart_data = {} 
         cart_data['id'] = cart.id
         cart_data['data_creare'] = cart.data_creare
         cart_data['id_utilizator'] = cart.id_utilizator
@@ -180,7 +168,6 @@ def all_carts(current_user):
 
     return jsonify({'cart' : output})
 
-#Returneaza id-ul cosului activ
 @app.route('/cart/activ', methods=['GET'])
 @token_required
 def active_cart(current_user):
@@ -188,7 +175,6 @@ def active_cart(current_user):
     cos = Cos.query.filter_by(id_utilizator=current_user.id, activ=True).first()
     return jsonify({'Cos activ' : cos.id})
 
-#Stergerea unui cos al utilizatorului pe baza id-ului cosului
 @app.route('/cart/<id_cos>', methods=['DELETE'])
 @token_required
 def delete_cart(current_user, id_cos):
@@ -206,7 +192,6 @@ def delete_cart(current_user, id_cos):
 
     return jsonify({'message' : 'Cos sters'})
 
-#Modifica starea cosului din activ in inactiv
 @app.route('/cart/update', methods = ['PUT'])
 @token_required
 def update_cart(current_user):
@@ -220,8 +205,6 @@ def update_cart(current_user):
 
     return jsonify({'message' : f'Cosul utilizatorului {current_user.prenume} a devenit inactiv.'})
 
-#-->ENDPOINTS PRODUSE
-#get_all_products() si get_one_product() nu au nevoie de log in pentru a returna date
 @app.route('/products', methods=['GET'])
 def get_all_products():
 
@@ -241,7 +224,6 @@ def get_all_products():
 
     return jsonify({'produse' : output})
     
-
 @app.route('/products/<id_prod>', methods=['GET'])
 def get_one_product(id_prod):
 
@@ -260,7 +242,6 @@ def get_one_product(id_prod):
 
     return jsonify({'produs' : product_data})
 
-
 @app.route('/products/create', methods=['POST'])
 @token_required
 def create_products(current_user):
@@ -274,7 +255,6 @@ def create_products(current_user):
     db.session.commit()
 
     return jsonify({'message' : 'Produs adaugat cu succes!'}), 200
-
 
 @app.route('/products/<id_prod>', methods = ['OPTIONS', 'PUT'])
 @token_required
@@ -295,7 +275,6 @@ def update_product(current_user, id_prod):
     db.session.commit()
     return jsonify({'message' : 'Numele produsului a fost actualizat!'})
 
-#
 @app.route('/products/<id_prod>', methods = ['DELETE'])
 @token_required
 def delete_product(current_user, id_prod):
@@ -305,7 +284,6 @@ def delete_product(current_user, id_prod):
     if not product: 
         return jsonify({'message' : 'Produsul nu exista!'})
 
-    #prima data stergem toate instantele care imprumuta cheie straina de la produs
     DetaliiCos.query.filter_by(id_produs = id_prod).delete()
     Stocuri.query.filter_by(id_produs = id_prod).delete()
     Imagini.query.filter_by(id_produs = id_prod).delete()
@@ -315,8 +293,6 @@ def delete_product(current_user, id_prod):
 
     return jsonify({'message' : 'Produs sters!'})    
 
-#--> ENPOINTS STOCURI DE PRODUSE SI IMAGINILE ACESTORA
-#Adauga detalii despre stocurile produselor, combinatii de culoare, marime si stoc
 @app.route('/products/stock/<id_prod>', methods = ['POST'])
 @token_required
 def add_stocks(current_user, id_prod):
@@ -333,7 +309,6 @@ def add_stocks(current_user, id_prod):
     db.session.commit()
     return jsonify({'message' : f'Detalii despre stocul produsului {produs.nume} au fost adaugate!'})
 
-#Face update a stocului pentru anumite marimi si culori trimise prin formular!
 @app.route('/products/stock/<id_prod>', methods=['PUT'])
 @token_required
 def update_stocks(current_user, id_prod):
@@ -349,7 +324,6 @@ def update_stocks(current_user, id_prod):
     db.session.commit()
     return jsonify({'message' : f'Stocul produsului {produs.nume} a fost actualizat cu succes!'})
 
-#Returneaza marimile si culorile disoponibile pentru fiecare produs, dar si stocurile
 @app.route('/products/stock/<id_prod>', methods=['GET'])
 def get_stocks(id_prod):
     produs = Produse.query.get(id_prod)
@@ -370,7 +344,6 @@ def get_stocks(id_prod):
 
     return jsonify({'stocuri' : output})
 
-#Adauga imagini pentru produse
 @app.route('/products/images/<id_prod>', methods=['POST'])
 @token_required
 def add_images(current_user, id_prod):
@@ -387,7 +360,6 @@ def add_images(current_user, id_prod):
     db.session.commit()
     return jsonify({'message' : f'Imagine adaugata cu succes pentru produsul {produs.nume}'})
     
-#Returneaza un array de imagini pentru fiecare produs
 @app.route('/products/images/<id_prod>', methods=['GET'])
 def show_images(id_prod):
     produs = Produse.query.get(id_prod)
@@ -403,8 +375,6 @@ def show_images(id_prod):
         output.append(imagine_data)
 
     return jsonify({'imagini' : output})
-
-#-->ENDPOINTS DETALII COS, PRODUSELE ADUAGATE IN COS SI GESTIONAREA ACESTORA
 
 @app.route('/cart/add_product/<id_produs>', methods = ['POST'])
 @token_required
@@ -473,18 +443,17 @@ def delete_from_cart(current_user, id_adaugare):
 
     return jsonify({'message' : f'Produs sters din cosul {cos.id} al utilizatorului {current_user.prenume}'})
 
-#-->ENDPOITNS PLASARE COMANDA SI GESTIONAREA ACESTEIA
 @app.route('/order/create', methods = ['POST'])
 @token_required
 def place_order(current_user):
     cos = Cos.query.filter_by(id_utilizator = current_user.id, activ=True).first()
-    # produse = db.session.query(Produse).join(DetaliiCos).join(Cos).filter(Cos.id_utilizator == current_user.id, DetaliiCos.cos.has(activ=True)).all()
+
     produse_cos = db.session.query(DetaliiCos).join(Cos).filter(Cos.id_utilizator == current_user.id, DetaliiCos.cos.has(activ=True)).all()
 
     if not produse_cos: 
         return jsonify({'message' : f'Nu exista produse in cosul {cos.id} pentru a plasa o comanda'})
     
-    total = 19.99 #costul standard de livrare
+    total = 19.99 
     for produs_cos in produse_cos:
         total += produs_cos.produs.pret
         detalii_stoc = Stocuri.query.filter_by(id_produs = produs_cos.produs.id, marime = produs_cos.marime, culoare = produs_cos.culoare).first()
@@ -544,8 +513,6 @@ def show_orders(current_user):
 
     return jsonify({'comenzi': output})
 
-
-#Pentru a afisa comenzile unui anumit utilizator. DOAR PENTRU ADMIN 
 @app.route('/orders/show/<id_utilizator>', methods=['GET'])
 @token_required
 def show_user_orders(current_user, id_utilizator):

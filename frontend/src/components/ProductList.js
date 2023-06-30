@@ -76,7 +76,6 @@ function ProductList() {
     <div> 
       <h1>Welcome to PaintProject</h1>
       {successMessage && (<p className='alert alert-success' role='alert'>{successMessage}</p>)}
-      {/* <button><Link to={`/products/create`}>Add product</Link></button> */}
       {user && user.admin && <button className="btn btn-primary"><Link to="/produse/adauga" className="custom-link">Adaugă produs</Link></button>}
       <button onClick={handleSort} className="btn btn-primary">
         {sortAsc ? 'Primele adaugari': 'Cele mai recente' }

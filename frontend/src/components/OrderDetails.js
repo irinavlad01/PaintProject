@@ -63,7 +63,6 @@ function OrderDetails() {
   return (
     <div>
       <h1>Detalii Comanda</h1>
-      {/* {message && <p>{message}</p>} */}
       <form onSubmit={handleSubmit}>
         <div>
           <label>
