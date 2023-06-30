@@ -11,8 +11,6 @@ class Utilizatori(db.Model):
     adresa_domiciliu = db.Column(db.String(100), nullable = False,)
     telefon = db.Column(db.String(10), nullable = False,)
     admin = db.Column(db.Boolean, default = False, nullable = False)
-
-    #relatia one-to-one to tabela cos
     cos = db.relationship('Cos', backref='utilizatori', uselist=False, lazy=True)
     def __repr__(self):
         return f"Utilizatori('{self.nume}', '{self.prenume}', '{self.email}', '{self.parola}', '{self.adresa_domiciliu}', '{self.telefon}', '{self.admin}')"
@@ -66,10 +64,7 @@ class Cos(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     data_creare = db.Column(db.DateTime, default=datetime.utcnow)
     activ = db.Column(db.Boolean, default = True, nullable = False)
-
-    #Cheia straina cate tabela Utilizatori
     id_utilizator = db.Column(db.String(36), db.ForeignKey('utilizatori.id'), nullable = False)
-    #Relatie cu DetaliiCos 
     detalii_cos = db.relationship('DetaliiCos', backref = 'cos', uselist = True)
     comenzi  = db.relationship('Comenzi', backref = 'cos', uselist = True)
 
@@ -79,9 +74,7 @@ class Cos(db.Model):
 class DetaliiCos(db.Model):
     __tablename__ = 'detalii_cos'
     id = db.Column(db.Integer, primary_key = True)
-    #cheie straina cos 
     id_cos = db.Column(db.Integer, db.ForeignKey('cos.id'), nullable = False)
-    #cheie straina produse 
     id_produs = db.Column(db.Integer, db.ForeignKey('produse.id'), nullable = False)
     descriere = db.Column(db.String(200), nullable=False)
     marime = db.Column(db.String(2), nullable=False)
