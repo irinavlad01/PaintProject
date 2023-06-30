@@ -39,7 +39,7 @@ function App() {
           setIsAuth(false);
       }
       
-      console.log(token) //pentru testare doar
+      console.log(token) 
     }, []);
 
   return (
@@ -47,9 +47,6 @@ function App() {
 
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <ul className="navbar-nav">
-          {/* <li className="nav-item">
-            <Link to="/" className="nav-link">Acasă</Link>
-          </li> */}
           <li className="nav-item">
             <Link to="/" className="nav-link">Produse</Link>
           </li>
