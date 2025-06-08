@@ -19,6 +19,7 @@ def token_required(f):
             return jsonify({'message' : 'Token lipsa din header! Nu sunteti autentificat'}), 401
         
         try:
+
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms = ['HS256'])
             current_user = Utilizatori.query.filter_by(id=data['id']).first()
         except:
@@ -78,7 +79,7 @@ def create_user():
     if utilizator_existent:
         return make_response('Există deja un utilizator cu acest email! Introduceti va rog un email nou!', 409)
 
-    hashed_pwd = generate_password_hash(data['parola'], method="sha256")
+    hashed_pwd = generate_password_hash(data['parola'], method="scrypt")
 
     utilizator =  Utilizatori(id = str(uuid.uuid4()), nume = data['nume'], prenume = data['prenume'], email = data['email'],
                               parola = hashed_pwd, adresa_domiciliu = data['adresa_domiciliu'], telefon = data['telefon'])
@@ -246,16 +247,44 @@ def get_one_product(id_prod):
 @token_required
 def create_products(current_user):
     if not current_user.admin:
-        return jsonify({'message' : 'Acces restrictionat! Nu puteti crea produse daca nu sunteti administrator'})
-    
-    data = request.get_json()
-    product = Produse(nume = data['nume'], categorie = data['categorie'], pret = data['pret'], descriere = data['descriere'])
+        return jsonify({'message': 'Acces restrictionat! Nu puteti crea produse daca nu sunteti administrator'}), 403
 
-    db.session.add(product)
+    # Use multipart/form-data instead of JSON
+    nume = request.form.get('nume')
+    categorie = request.form.get('categorie')
+    pret = request.form.get('pret')
+    descriere = request.form.get('descriere')
+
+    if not all([nume, categorie, pret, descriere]):
+        return jsonify({'message': 'Date incomplete'}), 400
+
+    try:
+        pret = float(pret)
+    except ValueError:
+        return jsonify({'message': 'Pret invalid'}), 400
+
+    fisier = None
+    fisier_mime = None
+
+    if 'fisier' in request.files:
+        file = request.files['fisier']
+        if file:
+            fisier = file.read()
+            fisier_mime = file.mimetype
+
+    produs = Produse(
+        nume=nume,
+        categorie=categorie,
+        pret=pret,
+        descriere=descriere,
+        fisier=fisier,
+        fisier_mime=fisier_mime
+    )
+
+    db.session.add(produs)
     db.session.commit()
 
-    return jsonify({'message' : 'Produs adaugat cu succes!'}), 200
-
+    return jsonify({'message': 'Produs adaugat cu succes!'}), 200
 @app.route('/products/<id_prod>', methods = ['OPTIONS', 'PUT'])
 @token_required
 def update_product(current_user, id_prod):

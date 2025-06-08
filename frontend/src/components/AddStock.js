@@ -16,7 +16,7 @@ function AddStock(props) {
             stoc: stoc
         }
         API.addStock(props.product.id, stockData)
-        .then(resp => {console.log(resp); window.location.reload();});
+        // .then(resp => {console.log(resp); window.location.reload();});
     }
 
 

@@ -1,5 +1,8 @@
 from api import db
 from datetime import datetime
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
 class Utilizatori(db.Model):
     __tablename__ = 'utilizatori'
@@ -31,6 +34,7 @@ class Produse(db.Model):
     categorie = db.Column(db.String(50), nullable = False)
     pret = db.Column(db.Float(precision = 2), nullable = False)
     descriere = db.Column(db.String(150), nullable = False)
+    fisier = db.Column(db.LargeBinary, nullable=True)
     data_lansare = db.Column(db.DateTime, default=datetime.utcnow)
     detalii_cos = db.relationship('DetaliiCos', backref = 'produs', uselist = True)
     imagini = db.relationship('Imagini', backref = 'produs', uselist = True)
@@ -90,3 +94,4 @@ class Comenzi(db.Model):
     total = db.Column(db.Float(precision = 2), nullable = False)
     adresa_livrare = db.Column(db.String(100), nullable = False)
     status = db.Column(db.String(20), nullable = False, default="inregistrata")
+

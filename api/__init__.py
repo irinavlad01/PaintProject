@@ -11,10 +11,15 @@ CORS(app, resources={
     }
 })
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost:3306/paintproject'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin1234@localhost:3306/paintproject'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = '9a1f529564d0ba085b081e2719f272f7'
+
+
 
 db = SQLAlchemy(app)
 
 from api import routes
+
+# with app.app_context():
+#     db.create_all()

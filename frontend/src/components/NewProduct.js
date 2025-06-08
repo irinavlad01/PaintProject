@@ -7,6 +7,7 @@ function NewProduct() {
   const [categorie, setCategorie] = useState("");
   const [pret, setPret] = useState("");
   const [descriere, setDescriere] = useState("");
+  const [fisier, setFisier] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -53,6 +54,12 @@ function NewProduct() {
           className="form-control"
           value={descriere}
           onChange={(e) => setDescriere(e.target.value)}></textarea>
+
+          <label className="form-label">Fisier: </label>
+          <input type="file"
+          className="form-control"
+          value={fisier}
+          onChange={(e) => setFisier(e.target.value)}></input>
 
           <button type="submit" className="btn btn-success">Adaugă produs</button>
         </form>
