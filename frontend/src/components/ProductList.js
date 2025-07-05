@@ -88,10 +88,57 @@ function ProductList() {
         </option>
       ))}
     </select>
-      {filteredProducts.map(product => (
-        <div className="product-list" key={product.id}><Link to={`/produse/${product.id}`}>{product.nume}</Link>
+        <div  className="row" style={{marginTop: '12px'}}>
+  {filteredProducts.map(product => (
+    <div className="col-md-4 mb-4" key={product.id}>
+      <div className="card h-100 shadow-sm">
+
+        {/* Product image (square) */}
+        {product.imagine ? (
+          <div
+            style={{
+              aspectRatio: '1 / 1',
+              overflow: 'hidden'
+            }}
+          >
+            <img
+              src={product.imagine}
+              alt={product.nume}
+              className="card-img-top"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+            />
+          </div>
+        ) : (
+          <div
+            className="card-img-top bg-secondary d-flex align-items-center justify-content-center text-white"
+            style={{ aspectRatio: '1 / 1' }}
+          >
+            Fără imagine
+          </div>
+        )}
+
+        {/* Product content */}
+        <div className="card-body d-flex flex-column text-center">
+          <h5 className="card-title">{product.nume}</h5>
+          <p className="text-muted mb-2">{product.categorie}</p>
+          <p><strong>{product.pret} RON</strong></p>
+          <Link
+            to={`/produse/${product.id}`}
+            className="btn btn-outline-primary mt-auto"
+          >
+            Vezi detalii
+          </Link>
         </div>
-      ))}
+      </div>
+    </div>
+  ))}
+</div>
+
+
       
     </div>
   )

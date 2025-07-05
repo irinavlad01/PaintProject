@@ -13,18 +13,23 @@ function NewProduct() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const productData = {
-      nume: nume,
-      categorie: categorie, 
-      pret: pret,
-      descriere: descriere
+    const formData = new FormData();
+    formData.append("nume", nume);
+    formData.append("categorie", categorie);
+    formData.append("pret", pret);
+    formData.append("descriere", descriere);
+    if (fisier) {
+      formData.append("fisier", fisier);
     }
 
-    API.addProduct(productData)
+    API.addProduct(formData)
     .then(resp => {
       console.log(resp);
       navigate('/', { state: { message: 'Produs adăugat cu succes!' } });
     })
+    .catch(err => {
+      console.error("Eroare la trimiterea produsului:", err);
+    });
   }
 
 
@@ -56,11 +61,12 @@ function NewProduct() {
           onChange={(e) => setDescriere(e.target.value)}></textarea>
 
           <label className="form-label">Fisier: </label>
-          <input type="file"
-          className="form-control"
-          value={fisier}
-          onChange={(e) => setFisier(e.target.value)}></input>
-
+          <input
+            type="file"
+            className="form-control"
+            accept=".jpg,.jpeg"
+            onChange={(e) => setFisier(e.target.files[0])}
+          />
           <button type="submit" className="btn btn-success">Adaugă produs</button>
         </form>
     </div>

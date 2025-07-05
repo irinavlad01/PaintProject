@@ -1,5 +1,7 @@
 from api import db
 from datetime import datetime
+from sqlalchemy.dialects.mysql import LONGBLOB  # Add this import at the top
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -34,7 +36,7 @@ class Produse(db.Model):
     categorie = db.Column(db.String(50), nullable = False)
     pret = db.Column(db.Float(precision = 2), nullable = False)
     descriere = db.Column(db.String(150), nullable = False)
-    fisier = db.Column(db.LargeBinary, nullable=True)
+    fisier = db.Column(LONGBLOB, nullable=True)  # ✅ Fix: store large images
     data_lansare = db.Column(db.DateTime, default=datetime.utcnow)
     detalii_cos = db.relationship('DetaliiCos', backref = 'produs', uselist = True)
     imagini = db.relationship('Imagini', backref = 'produs', uselist = True)

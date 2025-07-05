@@ -3,6 +3,7 @@ from flask import request, jsonify, make_response
 from api.models import Utilizatori, Produse, Cos, DetaliiCos, Comenzi, Stocuri, Imagini
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
+import base64
 import datetime
 from functools import wraps 
 import jwt
@@ -208,22 +209,28 @@ def update_cart(current_user):
 
 @app.route('/products', methods=['GET'])
 def get_all_products():
-
     produse = Produse.query.all()
-
     output = []
 
     for produs in produse:
-        produs_data = {}
-        produs_data['id'] = produs.id
-        produs_data['nume'] = produs.nume
-        produs_data['categorie'] = produs.categorie
-        produs_data['pret'] = produs.pret 
-        produs_data['descriere'] = produs.descriere
-        produs_data['data_lansare'] = produs.data_lansare
+        produs_data = {
+            'id': produs.id,
+            'nume': produs.nume,
+            'categorie': produs.categorie,
+            'pret': produs.pret,
+            'descriere': produs.descriere,
+            'data_lansare': produs.data_lansare,
+            'imagine': None  # Default to None
+        }
+
+        if produs.fisier:
+            # Convert binary to base64 string
+            encoded_image = base64.b64encode(produs.fisier).decode('utf-8')
+            produs_data['imagine'] = f"data:image/jpeg;base64,{encoded_image}"
+
         output.append(produs_data)
 
-    return jsonify({'produse' : output})
+    return jsonify({'produse': output})
     
 @app.route('/products/<id_prod>', methods=['GET'])
 def get_one_product(id_prod):
@@ -247,9 +254,8 @@ def get_one_product(id_prod):
 @token_required
 def create_products(current_user):
     if not current_user.admin:
-        return jsonify({'message': 'Acces restrictionat! Nu puteti crea produse daca nu sunteti administrator'}), 403
+        return jsonify({'message': 'Acces restricționat!'}), 403
 
-    # Use multipart/form-data instead of JSON
     nume = request.form.get('nume')
     categorie = request.form.get('categorie')
     pret = request.form.get('pret')
@@ -261,30 +267,30 @@ def create_products(current_user):
     try:
         pret = float(pret)
     except ValueError:
-        return jsonify({'message': 'Pret invalid'}), 400
+        return jsonify({'message': 'Preț invalid'}), 400
 
     fisier = None
-    fisier_mime = None
-
     if 'fisier' in request.files:
         file = request.files['fisier']
-        if file:
+        if file and file.filename:  # still check something was uploaded
             fisier = file.read()
-            fisier_mime = file.mimetype
+        else:
+            return jsonify({'message': 'Fișierul nu a fost selectat corect'}), 400
+    else:
+        return jsonify({'message': 'Fișierul este obligatoriu'}), 400
 
     produs = Produse(
         nume=nume,
         categorie=categorie,
         pret=pret,
         descriere=descriere,
-        fisier=fisier,
-        fisier_mime=fisier_mime
+        fisier=fisier
     )
 
     db.session.add(produs)
     db.session.commit()
 
-    return jsonify({'message': 'Produs adaugat cu succes!'}), 200
+    return jsonify({'message': 'Produs adăugat cu succes!'}), 200
 @app.route('/products/<id_prod>', methods = ['OPTIONS', 'PUT'])
 @token_required
 def update_product(current_user, id_prod):

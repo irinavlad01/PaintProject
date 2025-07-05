@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://127.0.0.1:5000';
+const BASE_URL = 'http://localhost:5000';
 const token = localStorage.getItem('token');
 
 const API = {
@@ -14,7 +14,7 @@ const API = {
         .catch(error => console.log(error))
     },
 
-    getProductById(id){ 
+    getProductById(id) {
         return axios.get(`${BASE_URL}/products/${id}`, {
             headers: {
                 'Content-Type' : 'application/json'
@@ -66,7 +66,7 @@ const API = {
     cartProducts(){
         return axios.get(`${BASE_URL}/cart/products`, {
             headers: {
-                'Conent-Type' : 'application/json', 
+                'Content-Type' : 'application/json',
                 'x-access-token' : `${token}`
             }
         })
@@ -76,7 +76,7 @@ const API = {
     placeOrder(address){
         return axios.post(`${BASE_URL}/order/create`, address, {
             headers: {
-                'Conent-Type' : 'application/json', 
+                'Content-Type' : 'application/json',
                 'x-access-token' : `${token}`
             }
         })
@@ -86,7 +86,7 @@ const API = {
     getUserById(id){
         return axios.get(`${BASE_URL}/users/${id}`, {
             headers: {
-                'Conent-Type' : 'application/json'
+                'Content-Type' : 'application/json'
             }
         })
         .then(response => response.data)
@@ -95,7 +95,7 @@ const API = {
     showAllOrders(){
         return axios.get(`${BASE_URL}/orders/show`, {
             headers: {
-                'Conent-Type' : 'application/json',
+                'Content-Type' : 'application/json',
                 'x-access-token' : `${token}`
             }
         })
@@ -105,7 +105,7 @@ const API = {
     showOrdersForUser(id){
         return axios.get(`${BASE_URL}/orders/show/${id}`, {
             headers: {
-                'Conent-Type' : 'application/json',
+                'Content-Type' : 'application/json',
                 'x-access-token' : `${token}`
             }
         })
@@ -116,7 +116,7 @@ const API = {
     updateProduct(id, productData){
         return axios.put(`${BASE_URL}/products/${id}`, productData, {
             headers: {
-                'Conent-Type' : 'application/json',
+                'Content-Type' : 'application/json',
                 'x-access-token' : `${token}`
             }
         })
@@ -127,7 +127,7 @@ const API = {
     deleteProduct(id){
         return axios.delete(`${BASE_URL}/products/${id}`, {
             headers: {
-                'Conent-Type' : 'application/json',
+                'Content-Type' : 'application/json',
                 'x-access-token' : `${token}`
             }
         })
@@ -138,7 +138,7 @@ const API = {
     addProduct(productData){
         return axios.post(`${BASE_URL}/products/create`, productData, {
             headers: {
-                'Conent-Type' : 'application/json',
+                'Content-Type': 'multipart/form-data',
                 'x-access-token' : `${token}`
             }
         })
